@@ -28,14 +28,14 @@
 </script>
 
 {#if isGameReady}
-	<div class="stats flex pb-4">
-		<div class="stat justify-items-end">
+	<div class="stats mb-4">
+		<div class="stat w-40 justify-items-end">
 			<p class="stat-title">Score</p>
 			{#key score}
 				<p in:fly={{ y: -15, duration: 500 }} class="stat-value">{score}</p>
 			{/key}
 		</div>
-		<div class="stat">
+		<div class="stat w-40">
 			<p class="stat-title">Best score</p>
 			{#key bestScore}
 				<p in:fly={{ y: -15, duration: 500 }} class="stat-value">{bestScore}</p>
