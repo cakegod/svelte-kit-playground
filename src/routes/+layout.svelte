@@ -2,7 +2,13 @@
 	import '../app.css'
 </script>
 
-<nav>
-	<a href="/">Home</a>
+<nav class="navbar bg-base-200">
+	<div>
+		<a class="btn btn-ghost text-xl" href="/">Playground</a>
+	</div>
+	<a class="btn btn-ghost" href="/memory-game">Memory Game</a>
 </nav>
-<slot></slot>
+
+<main class="max-w-7xl m-auto p-4">
+	<slot></slot>
+</main>
