@@ -11,7 +11,7 @@
 	}
 	function handleClick(card: Card) {
 		if (card.clicked) {
-			cards = cards.map((card) => ({ ...card, clicked: false }));
+			cards = shuffleCards(cards.map((card) => ({ ...card, clicked: false })));
 		} else {
 			card.clicked = true;
 			cards = shuffleCards(cards);
