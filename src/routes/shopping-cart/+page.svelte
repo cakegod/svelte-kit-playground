@@ -6,7 +6,10 @@
 
 <div transition:fade class="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
 	{#each products as product (product.name)}
-		<div class="card bg-secondary text-secondary-content">
+		<a
+			class="card bg-secondary text-secondary-content"
+			href={`/shopping-cart/${product.name.replaceAll(' ', '-')}`}
+		>
 			<figure>
 				<img class="h-full" src={product.url} alt={product.name} />
 			</figure>
@@ -14,6 +17,6 @@
 				<h2 class="text-base font-semibold uppercase opacity-80">{product.name}</h2>
 				<p class="text-3xl font-bold">{product.price}€</p>
 			</div>
-		</div>
+		</a>
 	{/each}
 </div>
