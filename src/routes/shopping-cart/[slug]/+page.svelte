@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { cart } from '../../../store';
+	import { cart } from 'store';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -22,17 +22,8 @@
 	<title>{data.name}</title>
 </svelte:head>
 
-<!-- Breadcrumb -->
-<div class="breadcrumbs self-start pb-4 text-sm">
-	<ul>
-		<li><a class="text-base-content/60" href="/">Home</a></li>
-		<li><a class="text-base-content/60" href="/shopping-cart">Shopping Cart</a></li>
-		<li><a class="" href={`/shopping-cart/${data.slug}`}>{data.name}</a></li>
-	</ul>
-</div>
-
 <!-- Product -->
-<div class="flex max-w-5xl flex-col items-center gap-4 self-start md:flex-row md:items-start">
+<div class="flex max-w-5xl flex-col items-center gap-4 lg:self-start md:flex-row md:items-start">
 	<figure>
 		<img class="rounded-box" src={data.url} alt={data.name} />
 	</figure>
