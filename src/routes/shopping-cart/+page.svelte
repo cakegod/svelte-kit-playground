@@ -4,9 +4,9 @@
 	let products = productsList;
 </script>
 
-<div transition:fade class="grid gap-10 shadow-xl sm:grid-cols-2 md:grid-cols-3">
+<div transition:fade class="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
 	{#each products as product (product.name)}
-		<div class="card bg-accent text-accent-content">
+		<div class="card bg-secondary text-secondary-content">
 			<figure>
 				<img class="h-full" src={product.url} alt={product.name} />
 			</figure>
