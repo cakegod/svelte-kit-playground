@@ -1,6 +1,11 @@
-export type Card = (typeof cardList)[number];
+export type Card = {
+	name: string;
+	id: string;
+	clicked: boolean;
+	img: string;
+};
 
-export const cardList = [
+export const cardList: Card[] = [
 	{
 		name: 'Rawst',
 		id: crypto.randomUUID(),
