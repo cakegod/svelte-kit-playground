@@ -4,9 +4,10 @@
 
 	// "/shopping-cart/butterscotch-cake"
 	// [["shopping-cart", "Shopping Cart"], ["butterscotch-cake","Butterscotch Cake"]]
+
 	function toBreadcrumb(url: string) {
 		const paths = url
-			.slice(1)
+
 			.split('/')
 			.map((item) => item.toLowerCase())
 			.map((path, i, arr) => arr.slice(0, i).join('/') + (i === 0 ? '' : '/') + path);
@@ -19,7 +20,7 @@
 					.map((name) => name.charAt(0).toUpperCase() + name.slice(1))
 					.join(' ')
 			);
-		return paths.map((path, i) => [path, names[i]]);
+		return paths.map((path, i) => [path, names[i - 1]]);
 	}
 
 	$: breadcrumbs = toBreadcrumb($page.url.pathname);
@@ -73,7 +74,7 @@
 							class={` ${
 								i === breadcrumbs.length - 1 ? 'font-bold text-base-content' : 'text-base-content'
 							}`}
-							href={`/${breadcrumb[0]}`}>{breadcrumb[1]}</a
+							href={`/${breadcrumb[0]}`}>{i === 0 ? 'Home' : breadcrumb[1]}</a
 						>
 					</li>
 				{/each}

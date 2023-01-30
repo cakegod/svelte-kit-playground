@@ -23,7 +23,7 @@
 </svelte:head>
 
 <!-- Product -->
-<div class="flex max-w-5xl flex-col items-center gap-4 lg:self-start md:flex-row md:items-start">
+<div class="flex max-w-5xl flex-col items-center gap-4 md:flex-row md:items-start lg:self-start">
 	<figure>
 		<img class="rounded-box" src={data.url} alt={data.name} />
 	</figure>
