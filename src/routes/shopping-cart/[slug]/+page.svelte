@@ -1,17 +1,45 @@
 <script lang="ts">
+	import { cart } from '../../../store';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+
+	function addProduct() {
+		cart.update((c) => {
+			const isProductPresent = c.some((product) => product.name === data.name);
+
+			if (isProductPresent) {
+				return c.map((product) =>
+					product.name === data.name ? { ...product, quantity: product.quantity + 1 } : product
+				);
+			}
+			return [...c, data];
+		});
+	}
 </script>
 
+<svelte:head>
+	<title>{data.name}</title>
+</svelte:head>
+
+<!-- Breadcrumb -->
+<div class="breadcrumbs pb-4 text-sm">
+	<ul>
+		<li><a class="text-base-content/60" href="/">Home</a></li>
+		<li><a class="text-base-content/60" href="/shopping-cart">Shopping Cart</a></li>
+		<li><a class="" href={`/shopping-cart/${data.slug}`}>{data.name}</a></li>
+	</ul>
+</div>
+
+<!-- Product -->
 <div class="flex flex-col gap-4">
 	<figure>
 		<img class="rounded-box" src={data.url} alt={data.name} />
 	</figure>
 	<div class="flex flex-col gap-4">
 		<h2 class="text-4xl font-bold ">{data.name}</h2>
-		<p class="text-3xl font-bold text-red-600">{data.price}€</p>
-		<button class="btn btn-success">Add to cart</button>
+		<p class="text-4xl font-bold text-red-700">{data.price}€</p>
+		<button on:click={addProduct} class="btn-success btn">Add to cart</button>
 		<div>
 			<h3 class="text-lg font-bold">Product details</h3>
 			<p class="text-base-content/75">{data.description}</p>
