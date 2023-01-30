@@ -1,8 +1,32 @@
-<script>
+<script lang="ts">
 	import '../app.css';
+	import { page } from '$app/stores';
+
+	// "/shopping-cart/butterscotch-cake"
+	// [["shopping-cart", "Shopping Cart"], ["butterscotch-cake","Butterscotch Cake"]]
+	function toBreadcrumb(url: string) {
+		const paths = url
+			.slice(1)
+			.split('/')
+			.map((item) => item.toLowerCase())
+			.map((path, i, arr) => arr.slice(0, i).join('/') + (i === 0 ? '' : '/') + path);
+		const names = url
+			.slice(1)
+			.split('/')
+			.map((item) =>
+				item
+					.split('-')
+					.map((name) => name.charAt(0).toUpperCase() + name.slice(1))
+					.join(' ')
+			);
+		return paths.map((path, i) => [path, names[i]]);
+	}
+
+	$: breadcrumbs = toBreadcrumb($page.url.pathname);
 </script>
 
 <div class="p-2">
+	<!-- Navbar -->
 	<nav class="navbar rounded-box max-w-screen-2xl bg-accent text-accent-content xl:mx-auto">
 		<div class="navbar-start">
 			<div class="dropdown">
@@ -39,6 +63,23 @@
 	</nav>
 
 	<main class="m-auto flex h-full max-w-7xl flex-col items-center justify-center p-4">
+		<!-- Breadcrumb -->
+
+		<div class="breadcrumbs self-start pb-4 text-sm">
+			<ul>
+				{#each breadcrumbs as breadcrumb, i}
+					<li>
+						<a
+							class={` ${
+								i === breadcrumbs.length - 1 ? 'font-bold text-base-content' : 'text-base-content'
+							}`}
+							href={`/${breadcrumb[0]}`}>{breadcrumb[1]}</a
+						>
+					</li>
+				{/each}
+			</ul>
+		</div>
+
 		<slot />
 	</main>
 </div>
