@@ -6,7 +6,7 @@
 	let productsQuantity = 0;
 
 	cart.subscribe((c) => {
-		productsQuantity = c.reduce((acc, curr) => (acc = +curr.quantity), 0);
+		productsQuantity = c.reduce((acc, curr) => (acc = acc + curr.quantity), 0);
 	});
 </script>
 
@@ -14,13 +14,21 @@
 	<title>Shopping Cart</title>
 </svelte:head>
 
-<p>{productsQuantity}</p>
+<button class="btn mb-4 gap-2">
+	Cart
+	<span class="badge-success badge">
+		+{productsQuantity}
+	</span>
+</button>
 
 <div transition:fade class="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
 	{#each products as product (product.name)}
 		<a
 			class="card bg-secondary text-secondary-content"
-			href={`/shopping-cart/${product.name.replaceAll(' ', '-')}`}
+			href={`/shopping-cart/${product.name
+				.split(' ')
+				.map((name) => name.toLowerCase())
+				.join('-')}`}
 		>
 			<figure>
 				<img class="h-full" src={product.url} alt={product.name} />
