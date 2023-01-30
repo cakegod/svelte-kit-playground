@@ -9,6 +9,7 @@
 	$: if (score > bestScore) {
 		bestScore = score;
 	}
+
 	function handleClick(card: Card) {
 		if (card.clicked) {
 			cards = shuffleCards(cards.map((card) => ({ ...card, clicked: false })));
@@ -43,10 +44,10 @@
 		</div>
 	</div>
 
-	<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 w-full">
+	<div class="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
 		{#each cards as card (card.id)}
 			<button
-				class="btn btn-lg h-40 flex flex-col gap-2"
+				class="btn-lg btn flex h-40 flex-col gap-2"
 				transition:fade
 				on:click={() => handleClick(card)}
 			>
@@ -60,7 +61,7 @@
 		{/each}
 	</div>
 {:else}
-	<button class="btn btn-lg btn-wide btn-primary" on:click={() => (isGameReady = !isGameReady)}>
+	<button class="btn-primary btn-wide btn-lg btn" on:click={() => (isGameReady = !isGameReady)}>
 		Press to start!
 	</button>
 {/if}
