@@ -50,7 +50,11 @@
 				transition:fade
 				on:click={() => handleClick(card)}
 			>
-				<img src={card.img} class="h-14" alt="a fictional fruit from Pokémon world" />
+				<img
+					src={card.img}
+					class="h-14"
+					alt={`${card.name}, a fictional fruit from Pokémon world`}
+				/>
 				<p>{card.name}</p>
 			</button>
 		{/each}
