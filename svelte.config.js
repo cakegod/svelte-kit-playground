@@ -6,7 +6,11 @@ const config = {
 	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
 	// for more information about preprocessors
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		alias: {
+			store: 'src/store.ts',
+			'@utils': 'src/lib/utils'
+		}
 	},
 	preprocess: vitePreprocess()
 };
