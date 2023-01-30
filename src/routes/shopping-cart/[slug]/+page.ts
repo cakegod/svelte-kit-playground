@@ -6,7 +6,7 @@ export const load = (({ params }) => {
 	const product = productsList.find((product) => product.name === params.slug.replaceAll('-', ' '));
 
 	if (product) {
-		return product;
+		return { ...product, slug: params.slug };
 	}
 	throw error(404, 'Not found');
 }) satisfies PageLoad;
