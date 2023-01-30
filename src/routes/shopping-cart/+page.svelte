@@ -1,8 +1,20 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
+	import { cart } from '../../store';
 	import { productsList } from './data';
 	let products = productsList;
+	let productsQuantity = 0;
+
+	cart.subscribe((c) => {
+		productsQuantity = c.reduce((acc, curr) => (acc = +curr.quantity), 0);
+	});
 </script>
+
+<svelte:head>
+	<title>Shopping Cart</title>
+</svelte:head>
+
+<p>{productsQuantity}</p>
 
 <div transition:fade class="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
 	{#each products as product (product.name)}
