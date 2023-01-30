@@ -23,7 +23,7 @@
 </svelte:head>
 
 <!-- Breadcrumb -->
-<div class="breadcrumbs pb-4 text-sm">
+<div class="breadcrumbs self-start pb-4 text-sm">
 	<ul>
 		<li><a class="text-base-content/60" href="/">Home</a></li>
 		<li><a class="text-base-content/60" href="/shopping-cart">Shopping Cart</a></li>
@@ -32,14 +32,16 @@
 </div>
 
 <!-- Product -->
-<div class="flex flex-col gap-4">
+<div class="flex max-w-5xl flex-col items-center gap-4 self-start md:flex-row md:items-start">
 	<figure>
 		<img class="rounded-box" src={data.url} alt={data.name} />
 	</figure>
-	<div class="flex flex-col gap-4">
+	<div class="flex flex-col gap-4 md:gap-6">
 		<h2 class="text-4xl font-bold ">{data.name}</h2>
 		<p class="text-4xl font-bold text-red-700">{data.price}€</p>
-		<button on:click={addProduct} class="btn-success btn">Add to cart</button>
+		<button on:click={addProduct} class="btn-success btn w-full max-w-xs self-center md:self-auto">
+			Add to cart
+		</button>
 		<div>
 			<h3 class="text-lg font-bold">Product details</h3>
 			<p class="text-base-content/75">{data.description}</p>
