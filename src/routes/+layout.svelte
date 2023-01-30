@@ -6,21 +6,14 @@
 	// [["shopping-cart", "Shopping Cart"], ["butterscotch-cake","Butterscotch Cake"]]
 
 	function toBreadcrumb(url: string) {
-		const paths = url
-
-			.split('/')
-			.map((item) => item.toLowerCase())
-			.map((path, i, arr) => arr.slice(0, i).join('/') + (i === 0 ? '' : '/') + path);
-		const names = url
-			.slice(1)
-			.split('/')
-			.map((item) =>
-				item
-					.split('-')
-					.map((name) => name.charAt(0).toUpperCase() + name.slice(1))
-					.join(' ')
-			);
-		return paths.map((path, i) => [path, names[i - 1]]);
+		return url.split('/').reduce((acc, curr, i, arr) => {
+			const path = arr.slice(0, i + 1).join('/');
+			const name = curr
+				.split('-')
+				.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+				.join(' ');
+			return [...acc, [path, name]];
+		}, [] as string[][]);
 	}
 
 	$: breadcrumbs = toBreadcrumb($page.url.pathname);
