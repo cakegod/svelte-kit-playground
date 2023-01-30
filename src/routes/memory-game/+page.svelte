@@ -33,6 +33,7 @@
 </svelte:head>
 
 {#if isGameReady}
+	<!-- Scores -->
 	<div class="stats mb-4 bg-base-300">
 		<div class="stat w-40 justify-items-end">
 			<p class="stat-title">Score</p>
@@ -48,6 +49,7 @@
 		</div>
 	</div>
 
+	<!-- Cards -->
 	<div class="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
 		{#each cards as card (card.id)}
 			<button
