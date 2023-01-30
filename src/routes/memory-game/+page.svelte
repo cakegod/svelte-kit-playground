@@ -28,8 +28,12 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Memory Game</title>
+</svelte:head>
+
 {#if isGameReady}
-	<div class="stats mb-4">
+	<div class="stats mb-4 bg-base-300">
 		<div class="stat w-40 justify-items-end">
 			<p class="stat-title">Score</p>
 			{#key score}
@@ -47,7 +51,7 @@
 	<div class="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
 		{#each cards as card (card.id)}
 			<button
-				class="btn-accent btn-lg btn flex h-40 flex-col gap-2"
+				class="btn-secondary btn-lg btn flex h-40 flex-col gap-2"
 				transition:fade
 				on:click={() => handleClick(card)}
 			>
