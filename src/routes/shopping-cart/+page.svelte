@@ -9,12 +9,11 @@
 	<title>Shopping Cart</title>
 </svelte:head>
 
-<button class="btn mb-4 gap-2">
-	Cart
+<a href="/shopping-cart/cart" class="btn-info btn mb-4 gap-2">
 	<span class="badge-success badge">
 		+{productsQuantity}
 	</span>
-</button>
+</a>
 
 <div class="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
 	{#each products as product (product.name)}
