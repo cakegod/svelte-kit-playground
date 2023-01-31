@@ -64,7 +64,7 @@ export const productsList: Product[] = [
 		quantity: 1
 	},
 	{
-		name: 'kitKat Chocolate Cake',
+		name: 'Kitkat Chocolate Cake',
 		price: 49.99,
 		url: 'https://media.bakingo.com/sq-kitkat-chocolate-cake-cake1119choc-A_1.jpg',
 		description:
