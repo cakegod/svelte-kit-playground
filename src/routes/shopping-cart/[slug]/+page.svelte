@@ -3,19 +3,6 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-
-	function addProduct() {
-		cart.update((c) => {
-			const isProductPresent = c.some((product) => product.name === data.name);
-
-			if (isProductPresent) {
-				return c.map((product) =>
-					product.name === data.name ? { ...product, quantity: product.quantity + 1 } : product
-				);
-			}
-			return [...c, data];
-		});
-	}
 </script>
 
 <svelte:head>
@@ -30,7 +17,10 @@
 	<div class="flex flex-col gap-4 md:gap-6">
 		<h2 class="text-4xl font-bold ">{data.name}</h2>
 		<p class="text-4xl font-bold text-red-700">{data.price}€</p>
-		<button on:click={addProduct} class="btn-success btn w-full max-w-xs self-center md:self-auto">
+		<button
+			on:click={() => cart.addProduct(data)}
+			class="btn-success btn w-full max-w-xs self-center md:self-auto"
+		>
 			Add to cart
 		</button>
 		<div>
