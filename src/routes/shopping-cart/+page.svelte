@@ -8,6 +8,8 @@
 	cart.subscribe((c) => {
 		productsQuantity = c.reduce((acc, curr) => (acc = acc + curr.quantity), 0);
 	});
+
+	$: console.log(cart);
 </script>
 
 <svelte:head>

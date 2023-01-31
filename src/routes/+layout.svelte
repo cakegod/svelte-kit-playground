@@ -58,16 +58,15 @@
 
 	<main class="m-auto flex h-full max-w-7xl flex-col items-center justify-center p-4">
 		<!-- Breadcrumb -->
-
 		<div class="breadcrumbs self-start pb-4 text-sm">
 			<ul>
 				{#each breadcrumbs as breadcrumb, i}
 					<li>
 						<a
-							class={` ${
+							class={`${
 								i === breadcrumbs.length - 1 ? 'font-bold text-base-content' : 'text-base-content'
 							}`}
-							href={`/${breadcrumb[0]}`}>{i === 0 ? 'Home' : breadcrumb[1]}</a
+							href={`${breadcrumb[0] ? breadcrumb[0] : '/'}`}>{i === 0 ? 'Home' : breadcrumb[1]}</a
 						>
 					</li>
 				{/each}
