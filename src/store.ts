@@ -21,6 +21,16 @@ function createCartStore() {
 					);
 				}
 				return [...c, newProduct];
-			})
+			}),
+		incrementQuantity: (product: Product) =>
+			update((c) =>
+				c.map((p) => (p.name === product.name ? { ...p, quantity: p.quantity + 1 } : p))
+			),
+		decrementQuantity: (product: Product) =>
+			update((c) =>
+				product.quantity === 1
+					? c.filter((p) => p.name !== product.name)
+					: c.map((p) => (p.name === product.name ? { ...p, quantity: p.quantity - 1 } : p))
+			)
 	};
 }
