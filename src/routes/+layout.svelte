@@ -47,6 +47,9 @@
 					<a class="p-4 transition-colors hover:bg-accent-focus" href="/shopping-cart">
 						Shopping cart
 					</a>
+					<a class="p-4 transition-colors hover:bg-accent-focus" href="/weather-app">
+						Weather App
+					</a>
 				</ul>
 			</div>
 		</div>
