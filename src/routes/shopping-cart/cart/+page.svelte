@@ -1,10 +1,15 @@
 <script lang="ts">
 	import { cart } from 'store';
+	$: total = new Intl.NumberFormat('fr', { style: 'currency', currency: 'EUR' }).format(
+		$cart.reduce((acc, curr) => (acc = curr.quantity * curr.price), 0)
+	);
 </script>
 
 <div class="flex w-full flex-col gap-4">
 	{#each $cart as product}
-		<div class="card card-side card-compact w-full gap-2 bg-secondary text-secondary-content">
+		<div
+			class="card card-side card-compact w-full max-w-md gap-2 bg-secondary text-secondary-content"
+		>
 			<figure class="w-32">
 				<img class="w-full" src={product.url} alt={product.name} />
 			</figure>
@@ -15,7 +20,7 @@
 					<span
 						on:click={() => cart.decrementQuantity(product)}
 						on:keydown={() => cart.decrementQuantity(product)}
-						class="badge-primary badge flex h-full w-8 items-center justify-center text-lg"
+						class="btn-sm btn flex items-center justify-center "
 					>
 						-
 					</span>
@@ -23,7 +28,7 @@
 					<span
 						on:click={() => cart.incrementQuantity(product)}
 						on:keydown={() => cart.incrementQuantity(product)}
-						class="badge-primary badge flex h-full w-8 items-center justify-center text-lg"
+						class="btn-sm btn flex items-center justify-center "
 					>
 						+
 					</span>
@@ -31,4 +36,5 @@
 			</div>
 		</div>
 	{/each}
+	<p>Total: {total}</p>
 </div>
