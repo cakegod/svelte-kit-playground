@@ -1,15 +1,24 @@
 <script lang="ts">
+	import type { Response } from './types';
+
 	let query: string;
+	let isFahrenheit = false;
 	let result = {
 		name: '',
 		country: '',
-		temp: '',
+		temp: 0,
 		description: '',
-		wind: '',
-		humidity: '',
+		wind: 0,
+		humidity: 0,
 		icon: ''
 	};
-	async function getWeatherData(query: string) {
+	let date = new Intl.DateTimeFormat('default', {
+		hour: 'numeric',
+		month: 'short',
+		day: '2-digit'
+	}).format(new Date());
+
+	async function getWeatherData(query: string): Promise<Response> {
 		const fetchData = await fetch(
 			`https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=897dcd4fdb105148b7436c12cb942fc3&units=metric`,
 			{ mode: 'cors' }
@@ -19,22 +28,21 @@
 
 	async function handleFetch(query: string) {
 		const data = await getWeatherData(query);
+
 		result.name = data.name;
 		result.country = data.sys.country;
-		result.temp = data.main.feels_like.toFixed(0);
+		result.temp = Math.round(data.main.feels_like * 10) / 10;
 		result.description = data.weather[0].main;
 		result.wind = data.wind.speed;
 		result.humidity = data.main.humidity;
 		result.icon = data.weather[0].icon;
 	}
 
-	handleFetch('Marseille');
-
 	function convertToF(celsius: number) {
-		return (celsius * 9) / 5 + 32;
+		return Math.round((celsius * 9) / 5 + 32 * 10) / 10;
 	}
 
-	let isFahrenheit = false;
+	handleFetch('Marseille');
 </script>
 
 <div class="flex w-full flex-col items-center gap-4">
@@ -46,7 +54,7 @@
 			class="input-accent input rounded-box"
 		/>
 	</form>
-
+	<p class="text-lg">{`Today, ${date}`}</p>
 	<div class="stats stats-vertical w-full max-w-sm bg-info/10 text-info-content shadow">
 		<div class="stat border-none">
 			<img
@@ -56,7 +64,7 @@
 			/>
 			<p class="stat-title w-20">{`${result.name}, ${result.country}`}</p>
 			<div class="stat-value flex gap-2">
-				<p>{isFahrenheit ? convertToF(Number(result.temp)) : result.temp}</p>
+				<p>{isFahrenheit ? convertToF(result.temp) : result.temp}</p>
 				<div class="flex items-start text-xl">
 					<button
 						on:click={() => (isFahrenheit = false)}
@@ -97,7 +105,7 @@
 				<p>Wind Speed</p>
 			</div>
 			<div class="stat-value flex items-center gap-2">
-				<p>{`${Number(result.wind).toFixed(1)} km/h`}</p>
+				<p>{`${result.wind.toFixed(1)} km/h`}</p>
 			</div>
 		</div>
 		<div class="stat border-none">
