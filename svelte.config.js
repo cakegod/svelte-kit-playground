@@ -9,7 +9,8 @@ const config = {
 		adapter: adapter(),
 		alias: {
 			store: 'src/store.ts',
-			'@utils': 'src/lib/utils'
+			'@utils': 'src/lib/utils',
+			'@components': 'src/lib/components'
 		}
 	},
 	preprocess: vitePreprocess()
