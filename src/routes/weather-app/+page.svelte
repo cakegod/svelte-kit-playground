@@ -37,6 +37,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Weather App</title>
+</svelte:head>
+
 <div class="flex w-full flex-col items-center gap-4">
 	<form on:submit={() => (promise = handleFetch(query))}>
 		<input
