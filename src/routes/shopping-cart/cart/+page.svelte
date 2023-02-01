@@ -5,6 +5,10 @@
 	);
 </script>
 
+<svelte:head>
+	<title>Cart</title>
+</svelte:head>
+
 <div class="flex w-full flex-col gap-4">
 	{#each $cart as product}
 		<div
