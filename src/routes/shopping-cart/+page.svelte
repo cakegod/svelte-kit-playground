@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { cart } from '../../store';
 	import { productsList } from './data';
+	import { IconShoppingCart } from '@tabler/icons-svelte';
 	let products = productsList;
 	let productsQuantity = $cart.reduce((acc, curr) => (acc = acc + curr.quantity), 0);
 </script>
@@ -9,10 +10,11 @@
 	<title>Shopping Cart</title>
 </svelte:head>
 
-<a href="/shopping-cart/cart" class="btn-info btn mb-4 gap-2">
-	<span class="badge-success badge">
-		+{productsQuantity}
-	</span>
+<a href="/shopping-cart/cart" class="btn-primary rounded-box indicator btn mb-4 gap-2">
+	<IconShoppingCart /> Cart
+	{#if productsQuantity}
+	<span class="badge indicator-item">{productsQuantity}</span>
+	{/if}
 </a>
 
 <div class="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
