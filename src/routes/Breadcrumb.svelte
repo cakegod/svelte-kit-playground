@@ -5,6 +5,7 @@
 	// [["shopping-cart", "Shopping Cart"], ["butterscotch-cake","Butterscotch Cake"]]
 
 	function toBreadcrumb(url: string) {
+		if (url === '/') return [];
 		return url.split('/').reduce((acc, curr, i, arr) => {
 			const path = arr.slice(0, i + 1).join('/');
 			const name = curr
@@ -19,7 +20,7 @@
 	$: isLastItem = (index: number) => index === breadcrumbs.length - 1;
 </script>
 
-<div class="breadcrumbs self-start pb-4 text-sm">
+<div class="breadcrumbs flex self-start py-4 text-sm">
 	<ul>
 		{#each breadcrumbs as [path, name], index}
 			<li>
