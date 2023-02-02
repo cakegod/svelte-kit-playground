@@ -11,23 +11,21 @@
 				.split('-')
 				.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
 				.join(' ');
-			return [...acc, [path, name]];
+			return [...acc, path && name ? [path, name] : ['/', 'Home']];
 		}, [] as string[][]);
 	}
 
 	$: breadcrumbs = toBreadcrumb($page.url.pathname);
+	$: isLastItem = (index: number) => index === breadcrumbs.length - 1;
 </script>
 
 <div class="breadcrumbs self-start pb-4 text-sm">
 	<ul>
-		{#each breadcrumbs as breadcrumb, i}
+		{#each breadcrumbs as [path, name], index}
 			<li>
-				<a
-					class={`${
-						i === breadcrumbs.length - 1 ? 'font-bold text-base-content' : 'text-base-content'
-					}`}
-					href={`${breadcrumb[0] ? breadcrumb[0] : '/'}`}>{i === 0 ? 'Home' : breadcrumb[1]}</a
-				>
+				<a class:font-bold={isLastItem(index)} href={path}>
+					{name}
+				</a>
 			</li>
 		{/each}
 	</ul>
