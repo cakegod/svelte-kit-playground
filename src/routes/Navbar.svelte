@@ -9,7 +9,7 @@
 </script>
 
 <nav class="navbar rounded-box max-w-screen-2xl bg-accent text-accent-content xl:mx-auto">
-	<div class=" dropdown navbar-start">
+	<div class=" navbar-start dropdown">
 		<button class="btn-ghost btn flex flex-wrap">
 			<IconAlignJustified />
 		</button>

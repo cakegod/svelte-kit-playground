@@ -46,7 +46,7 @@
 	<title>Weather App</title>
 </svelte:head>
 
-<div class="flex w-full flex-col items-center gap-4">
+<div class="flex h-full w-full flex-col items-center gap-4">
 	<form on:submit={() => (promise = handleFetch(query))}>
 		<input
 			bind:value={query}
@@ -55,11 +55,10 @@
 			class="input-accent input rounded-box"
 		/>
 	</form>
-	<p class="text-lg">{`Today, ${date}`}</p>
-
 	{#await promise}
 		<IconWhirl size={50} class="animate-spin" />
 	{:then { icon, name, country, temp, description, wind, humidity }}
+		<p class="text-lg">{`Today, ${date}`}</p>
 		<div class="stats stats-vertical w-full max-w-sm bg-info/10 text-info-content shadow">
 			<div class="stat border-none">
 				<img
@@ -70,21 +69,21 @@
 				<p class="stat-title w-20">{`${name}, ${country}`}</p>
 				<div class="stat-value flex gap-2">
 					<p>{temperatureType === 'fahreinheit' ? temp.fahreinheit : temp.celsius}</p>
-					<div class="flex items-start text-xl">
-						<button
-							on:click={() => (temperatureType = 'celsius')}
-							class:light-text={temperatureType !== 'celsius'}
-						>
-							°C
-						</button>
-						<span class="font-normal">|</span>
-						<button
-							on:click={() => (temperatureType = 'fahreinheit')}
-							class:light-text={temperatureType !== 'fahreinheit'}
-						>
-							°F
-						</button>
-					</div>
+					<button
+						on:click={() => (temperatureType = 'celsius')}
+						class:light-text={temperatureType !== 'celsius'}
+						class="flex text-xl"
+					>
+						°C
+					</button>
+					<span class="text-xl font-normal">|</span>
+					<button
+						on:click={() => (temperatureType = 'fahreinheit')}
+						class:light-text={temperatureType !== 'fahreinheit'}
+						class="flex text-xl"
+					>
+						°F
+					</button>
 				</div>
 				<p class="stat-title">{description}</p>
 			</div>
@@ -102,13 +101,13 @@
 					<IconDropletFilled />
 					<p>Humidity</p>
 				</div>
-				<p class="stat-value">{humidity}</p>
+				<p class="stat-value">{`${humidity}%`}</p>
 			</div>
 		</div>
 	{:catch}
-		<div class="rounded-box flex gap-2 bg-error p-2 font-bold text-error-content">
-			<IconAlertTriangle />
-			<span>Oops, something went wrong! Please check the city name and try again.</span>
+		<div class="rounded-box flex items-center gap-2 bg-error p-6 font-bold text-error-content">
+			<IconAlertTriangle size={35} />
+			<span>Oops, something went wrong! <br /> Please check the city name and try again.</span>
 		</div>
 	{/await}
 </div>
