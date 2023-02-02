@@ -38,7 +38,7 @@
 	}
 
 	function convertToF(celsius: number) {
-		return Math.round((celsius * 9) / 5 + 32 * 10) / 10;
+		return (celsius * 9) / 5 + 32;
 	}
 </script>
 
