@@ -1,6 +1,12 @@
 <script lang="ts">
 	import type { Response } from './types';
-	import { IconWhirl, IconWind, IconDropletFilled, IconAlertTriangle } from '@tabler/icons-svelte';
+	import {
+		IconWhirl,
+		IconWind,
+		IconDropletFilled,
+		IconAlertTriangle,
+		IconSearch
+	} from '@tabler/icons-svelte';
 
 	let query: string;
 	let promise = handleFetch('Marseille');
@@ -48,18 +54,16 @@
 
 <div class="flex h-full w-full flex-col items-center gap-4">
 	<form on:submit={() => (promise = handleFetch(query))}>
-		<input
-			bind:value={query}
-			type="text"
-			placeholder="Search City"
-			class="input-accent input rounded-box"
-		/>
+		<div class=" input-group">
+			<input bind:value={query} type="text" placeholder="Search City" class="input-accent input " />
+			<button class="btn-accent btn"><IconSearch /></button>
+		</div>
 	</form>
 	{#await promise}
 		<IconWhirl size={50} class="animate-spin" />
 	{:then { icon, name, country, temp, description, wind, humidity }}
-		<p class="text-lg">{`Today, ${date}`}</p>
-		<div class="stats stats-vertical w-full max-w-sm bg-info/10 text-info-content shadow">
+		<p class="text-lg font-medium text-success-content/60">{`Today, ${date}`}</p>
+		<div class="stats stats-vertical w-full max-w-sm bg-success/10 text-success-content shadow">
 			<div class="stat border-none">
 				<img
 					class="stat-figure"
