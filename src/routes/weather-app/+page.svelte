@@ -108,7 +108,7 @@
 	{:catch}
 		<div class="rounded-box flex gap-2 bg-error p-2 font-bold text-error-content">
 			<IconAlertTriangle />
-			<span>Error! Check the city name and try again.</span>
+			<span>Oops, something went wrong! Please check the city name and try again.</span>
 		</div>
 	{/await}
 </div>
