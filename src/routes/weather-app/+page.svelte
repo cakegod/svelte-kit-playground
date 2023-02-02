@@ -3,8 +3,10 @@
 	import { IconWhirl, IconWind, IconDropletFilled, IconAlertTriangle } from '@tabler/icons-svelte';
 
 	let query: string;
-	let isFahrenheit = false;
 	let promise = handleFetch('Marseille');
+	let temperatureType: 'celsius' | 'fahreinheit' = 'celsius';
+	$: temperatureType;
+
 	const date = new Intl.DateTimeFormat('default', {
 		hour: 'numeric',
 		month: 'short',
@@ -24,7 +26,10 @@
 		return {
 			name: data.name,
 			country: data.sys.country,
-			temp: Math.round(data.main.feels_like * 10) / 10,
+			temp: {
+				celsius: Math.round(data.main.feels_like * 10) / 10,
+				fahreinheit: Math.round(convertToF(data.main.feels_like) * 10) / 10
+			},
 			description: data.weather[0].main,
 			wind: data.wind.speed,
 			humidity: data.main.humidity,
@@ -54,34 +59,34 @@
 
 	{#await promise}
 		<IconWhirl size={50} class="animate-spin" />
-	{:then result}
+	{:then { icon, name, country, temp, description, wind, humidity }}
 		<div class="stats stats-vertical w-full max-w-sm bg-info/10 text-info-content shadow">
 			<div class="stat border-none">
 				<img
 					class="stat-figure"
-					src={`http://openweathermap.org/img/wn/${result.icon}@2x.png`}
+					src={`http://openweathermap.org/img/wn/${icon}@2x.png`}
 					alt="weather"
 				/>
-				<p class="stat-title w-20">{`${result.name}, ${result.country}`}</p>
+				<p class="stat-title w-20">{`${name}, ${country}`}</p>
 				<div class="stat-value flex gap-2">
-					<p>{isFahrenheit ? convertToF(result.temp) : result.temp}</p>
+					<p>{temperatureType === 'fahreinheit' ? temp.fahreinheit : temp.celsius}</p>
 					<div class="flex items-start text-xl">
 						<button
-							on:click={() => (isFahrenheit = false)}
-							class={isFahrenheit ? 'text-info-content/40' : ''}
+							on:click={() => (temperatureType = 'celsius')}
+							class:light-text={temperatureType !== 'celsius'}
 						>
-							{`°C`}
+							°C
 						</button>
 						<span class="font-normal">|</span>
 						<button
-							on:click={() => (isFahrenheit = true)}
-							class={!isFahrenheit ? 'text-info-content/40' : ''}
+							on:click={() => (temperatureType = 'fahreinheit')}
+							class:light-text={temperatureType !== 'fahreinheit'}
 						>
-							{`°F`}
+							°F
 						</button>
 					</div>
 				</div>
-				<p class="stat-title">{result.description}</p>
+				<p class="stat-title">{description}</p>
 			</div>
 			<div class="stat border-none">
 				<div class="stat-title flex gap-1">
@@ -89,7 +94,7 @@
 					<p>Wind Speed</p>
 				</div>
 				<div class="stat-value flex items-center gap-2">
-					<p>{`${result.wind.toFixed(1)} km/h`}</p>
+					<p>{`${wind.toFixed(1)} km/h`}</p>
 				</div>
 			</div>
 			<div class="stat border-none">
@@ -97,7 +102,7 @@
 					<IconDropletFilled />
 					<p>Humidity</p>
 				</div>
-				<p class="stat-value">{`${result.humidity}%`}</p>
+				<p class="stat-value">{humidity}</p>
 			</div>
 		</div>
 	{:catch}
@@ -107,3 +112,9 @@
 		</div>
 	{/await}
 </div>
+
+<style lang="postcss">
+	.light-text {
+		@apply text-info-content/40;
+	}
+</style>

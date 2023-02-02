@@ -13,7 +13,7 @@
 <a href="/shopping-cart/cart" class="btn-primary rounded-box indicator btn mb-4 gap-2">
 	<IconShoppingCart /> Cart
 	{#if productsQuantity}
-	<span class="badge indicator-item">{productsQuantity}</span>
+		<span class="badge indicator-item">{productsQuantity}</span>
 	{/if}
 </a>
 
