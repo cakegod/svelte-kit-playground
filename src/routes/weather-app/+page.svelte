@@ -9,7 +9,7 @@
 	} from '@tabler/icons-svelte';
 
 	let query: string;
-	let promise = handleFetch('Marseille');
+	let promise = fetchWeather('Marseille');
 	let temperatureType: 'celsius' | 'fahreinheit' = 'celsius';
 	$: temperatureType;
 
@@ -27,7 +27,7 @@
 		return await fetchData.json();
 	}
 
-	async function handleFetch(query: string) {
+	async function fetchWeather(query: string) {
 		const data = await getWeatherData(query);
 		return {
 			name: data.name,
@@ -53,7 +53,7 @@
 </svelte:head>
 
 <div class="flex h-full w-full flex-col items-center gap-4">
-	<form on:submit={() => (promise = handleFetch(query))}>
+	<form on:submit={() => (promise = fetchWeather(query))}>
 		<div class=" input-group">
 			<input bind:value={query} type="text" placeholder="Search City" class="input-accent input " />
 			<button class="btn-accent btn"><IconSearch /></button>
