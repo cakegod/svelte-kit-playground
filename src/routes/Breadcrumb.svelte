@@ -12,8 +12,8 @@
 				.split('-')
 				.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
 				.join(' ');
-			return [...acc, path && name ? [path, name] : ['/', 'Home']];
-		}, [] as string[][]);
+			return [...acc, path && name ? { path, name } : { path: '/', name: 'Home' }];
+		}, [] as { path: string; name: string }[]);
 	}
 
 	$: breadcrumbs = toBreadcrumb($page.url.pathname);
@@ -22,10 +22,10 @@
 
 <div class="breadcrumbs flex self-start py-4 text-sm">
 	<ul>
-		{#each breadcrumbs as [path, name], index}
+		{#each breadcrumbs as breadcrumb, index}
 			<li>
-				<a class:font-bold={isLastItem(index)} href={path}>
-					{name}
+				<a class:font-bold={isLastItem(index)} href={breadcrumb.path}>
+					{breadcrumb.name}
 				</a>
 			</li>
 		{/each}
