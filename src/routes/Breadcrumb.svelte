@@ -4,17 +4,22 @@
 	// "/shopping-cart/butterscotch-cake"
 	// [["shopping-cart", "Shopping Cart"], ["butterscotch-cake","Butterscotch Cake"]]
 
-	function toBreadcrumb(url: string) {
-		if (url === '/') return [];
-		return url.split('/').reduce((acc, curr, i, arr) => {
-			const path = arr.slice(0, i + 1).join('/');
-			const name = curr
-				.split('-')
-				.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-				.join(' ');
-			return [...acc, path && name ? { path, name } : { path: '/', name: 'Home' }];
-		}, [] as { path: string; name: string }[]);
-	}
+	type Breadcrumb = {
+		path: string;
+		name: string;
+	};
+
+	const toBreadcrumb = (url: string): Breadcrumb[] | [] =>
+		url === '/'
+			? []
+			: url.split('/').reduce((acc, curr, i, arr) => {
+					const path = arr.slice(0, i + 1).join('/');
+					const name = curr
+						.split('-')
+						.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+						.join(' ');
+					return [...acc, path && name ? { path, name } : { path: '/', name: 'Home' }];
+			  }, [] as Breadcrumb[]);
 
 	$: breadcrumbs = toBreadcrumb($page.url.pathname);
 	$: isLastItem = (index: number) => index === breadcrumbs.length - 1;
