@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { IconDropletFilled, IconWind } from '@tabler/icons-svelte';
-	import type { fetchWeatherReturn } from './+page.svelte';
+	import type { FetchWeatherReturn } from './+page.svelte';
 
-	export let weatherData: fetchWeatherReturn;
+	export let weatherData: FetchWeatherReturn;
 	let temperatureType: 'celsius' | 'fahreinheit' = 'celsius';
 	$: temperatureType;
 </script>

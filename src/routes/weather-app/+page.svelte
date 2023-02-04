@@ -1,13 +1,14 @@
 <script lang="ts" context="module">
+	import type { Response } from './types';
+
 	async function getWeatherData(query: string): Promise<Response> {
 		const fetchData = await fetch(
-			`https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=897dcd4fdb105148b7436c12cb942fc3&units=metric`,
-			{ mode: 'cors' }
+			`https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=897dcd4fdb105148b7436c12cb942fc3&units=metric`
 		);
 		return await fetchData.json();
 	}
 
-	async function fetchWeather(query: string) {
+	async function fetchWeather(query: string): Promise<FetchWeatherReturn> {
 		const data = await getWeatherData(query);
 		return {
 			name: data.name,
@@ -23,15 +24,23 @@
 		};
 	}
 
-	function convertToF(celsius: number) {
-		return (celsius * 9) / 5 + 32;
-	}
+	const convertToF = (celsius: number) => (celsius * 9) / 5 + 32;
 
-	export type fetchWeatherReturn = Awaited<ReturnType<typeof fetchWeather>>;
+	export interface FetchWeatherReturn {
+		name: string;
+		country: string;
+		temp: {
+			celsius: number;
+			fahreinheit: number;
+		};
+		description: string;
+		wind: number;
+		humidity: number;
+		icon: string;
+	}
 </script>
 
 <script lang="ts">
-	import type { Response } from './types';
 	import { IconWhirl, IconAlertTriangle, IconSearch } from '@tabler/icons-svelte';
 	import CurrentWeather from './CurrentWeather.svelte';
 
@@ -57,7 +66,8 @@
 		</div>
 	</form>
 	{#await promise}
-		<IconWhirl size={50} class="animate-spin" />
+		<IconWhirl size={100} class="animate-spin" />
+		<p>Loading...</p>
 	{:then weatherData}
 		<p class="text-lg font-medium text-success-content/60">{`Today, ${date}`}</p>
 		<CurrentWeather {weatherData} />
