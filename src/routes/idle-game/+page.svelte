@@ -2,7 +2,7 @@
 	import { fly } from 'svelte/transition';
 	import type { GeneratorUpgrade, ManaCapUpgrade, Resource, Spell, Upgrade } from './types';
 
-	const baseUpgrades: ReadonlyArray<Upgrade | GeneratorUpgrade | ManaCapUpgrade> = Object.freeze([
+	const BASE_UPGRADES: ReadonlyArray<Upgrade | GeneratorUpgrade | ManaCapUpgrade> = Object.freeze([
 		Object.freeze({
 			name: 'infuser',
 			amount: 0,
@@ -31,7 +31,7 @@
 			tooltip: 'increases mana cap by 200'
 		})
 	]);
-	let tickSpeed = 100;
+	const TICK_SPEED = 100;
 
 	const resources: Record<string, Resource> = {
 		mana: {
@@ -68,7 +68,7 @@
 		resources.mana.perTick = nextManaPerTick;
 	}
 
-	let upgrades: (GeneratorUpgrade | ManaCapUpgrade | Upgrade)[] = baseUpgrades.map((upgrade) => ({
+	let upgrades: (GeneratorUpgrade | ManaCapUpgrade | Upgrade)[] = BASE_UPGRADES.map((upgrade) => ({
 		...upgrade
 	}));
 
@@ -90,11 +90,12 @@
 	}
 
 	function buyUpgrade(upgrade: Upgrade) {
+		const UPGRADE_MULTIPLIER = 1.5;
 		if (!canBuy(upgrade.price)) return;
 		if (upgrade.amount + 1 > upgrade.cap) return;
 		resources.mana.current -= upgrade.price;
 		upgrade.amount += 1;
-		upgrade.price *= 1.5;
+		upgrade.price *= UPGRADE_MULTIPLIER;
 		upgrades = upgrades;
 	}
 
@@ -102,7 +103,7 @@
 		if (!canBuy(upgrade.price)) return;
 		resources.mana.current -= prestigeUpgrade.price;
 		prestigeUpgrade.amount += prestigeUpgrade.amount + 0.2;
-		upgrades = baseUpgrades.map((upgrade) => ({ ...upgrade }));
+		upgrades = BASE_UPGRADES.map((upgrade) => ({ ...upgrade }));
 		resources.mana.perTick = 10;
 		resources.knowledge.current = 0;
 	}
@@ -117,7 +118,7 @@
 		spell.effect();
 	}
 
-	const spells = {
+	const spells: Record<string, Spell> = {
 		gainKnowledge: {
 			name: 'Gain knowledge',
 			manaCost: 100,
@@ -127,7 +128,7 @@
 		}
 	};
 
-	setInterval(generateManaPerTick, tickSpeed);
+	setInterval(generateManaPerTick, TICK_SPEED);
 </script>
 
 <h2 class="mb-4 text-lg">Current prestige power: {round(prestigeUpgrade.amount * 100)}%</h2>
