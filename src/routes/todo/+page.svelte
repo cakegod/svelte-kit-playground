@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { Todo } from './classes';
 	import { crossfade, slide } from 'svelte/transition';
-	import { backOut, bounceOut, elasticInOut, sineIn, sineOut } from 'svelte/easing';
 
-	const [send, receive] = crossfade({});
 	let todo = new Todo();
 	let isAddingTask = false;
 	let taskName = '';
@@ -16,7 +14,7 @@
 		{#each project.tasks as task (task.id)}
 			<div
 				transition:slide
-				class="card card-compact grow bg-base-300 shadow"
+				class="card-compact card grow bg-base-300 shadow"
 				class:bg-success={task.done}
 				class:bg-warning={!task.done}
 			>
@@ -71,13 +69,43 @@
 		{:else}
 			<button on:click={() => (isAddingTask = true)} class="btn-info btn"> + Add new task </button>
 		{/if}
+		{#if isAddingTask}
+			<form
+				transition:slide
+				on:submit={() => {
+					project.addTask(taskName, taskContent);
+					todo = todo;
+				}}
+				class="form-control rounded-box bg-base-300 p-4 shadow"
+			>
+				<button
+					on:click={() => (isAddingTask = false)}
+					type="button"
+					class="btn-error btn-xs btn w-6 self-end">x</button
+				>
+				<label class="form-control label items-start">
+					Task Name
+					<input required bind:value={taskName} class="input w-full" type="text" />
+				</label>
+				<label class="form-control label items-start">
+					Task Content
+					<textarea required bind:value={taskContent} class="textarea w-full" />
+				</label>
+				<button class="btn-success btn" type="submit">Add task</button>
+			</form>
+		{:else}
+			<button on:click={() => (isAddingTask = true)} class="btn-info btn"> + Add new task </button>
+		{/if}
 	</div>
 {/each}
 
 <style lang="postcss">
 	.bg-success {
+	.bg-success {
 		@apply bg-success/5;
 	}
+	.bg-warning {
+		@apply bg-warning/5;
 	.bg-warning {
 		@apply bg-warning/5;
 	}
