@@ -20,6 +20,8 @@
 </script>
 
 <script lang="ts">
+	import { fly } from 'svelte/transition';
+
 	const baseUpgrades: ReadonlyArray<Upgrade | GeneratorUpgrade | ManaCapUpgrade> = Object.freeze([
 		Object.freeze({
 			name: 'infuser',
@@ -40,22 +42,28 @@
 			tooltip: 'increase mana cap by 20'
 		})
 	]);
-	let tickSpeed = 1000;
+	let tickSpeed = 100;
 	let baseOrbCap = 50;
 	let orbCap = baseOrbCap;
-	$: orbCap =
-		baseOrbCap +
-		upgrades
-			.filter((upgrade): upgrade is ManaCapUpgrade => upgrade.type === 'mana cap')
-			.reduce((acc, curr) => (curr ? (acc += curr.amount * curr.capAmount) : acc), 0);
+	$: {
+		const nextCap =
+			baseOrbCap +
+			upgrades
+				.filter((upgrade): upgrade is ManaCapUpgrade => upgrade.type === 'mana cap')
+				.reduce((acc, curr) => (curr ? (acc += curr.amount * curr.capAmount) : acc), 0);
+		orbCap = nextCap;
+	}
 	let baseManaPerTick = 1;
 	let manaPerTick = baseManaPerTick;
-	$: manaPerTick =
-		baseManaPerTick +
-		upgrades
-			.filter((upgrade): upgrade is GeneratorUpgrade => upgrade.type === 'generator')
-			.reduce((acc, curr) => (curr ? (acc += curr.amount * curr.generate) : acc), 0) *
-			(prestigeUpgrade.amount * 2);
+	$: {
+		const nextManaPerTick =
+			baseManaPerTick +
+			upgrades
+				.filter((upgrade): upgrade is GeneratorUpgrade => upgrade.type === 'generator')
+				.reduce((acc, curr) => (curr ? (acc += curr.amount * curr.generate) : acc), 0) *
+				(prestigeUpgrade.amount + 1);
+		manaPerTick = nextManaPerTick;
+	}
 
 	let currentMana = 0;
 	let upgrades: (GeneratorUpgrade | ManaCapUpgrade | Upgrade)[] = baseUpgrades.map((upgrade) => ({
@@ -65,11 +73,10 @@
 	let prestigeUpgrade = {
 		price: 50,
 		tooltip: 'reset game to gain bonuses',
-		amount: 1
+		amount: 0
 	};
 
 	function generateManaPerTick() {
-		// if (currentMana + manaPerTick > orbCap) return;
 		if (currentMana < orbCap) currentMana += manaPerTick;
 	}
 
@@ -77,72 +84,69 @@
 		return price <= currentMana;
 	}
 
-	// function buyGeneratorUpgrade(upgrade: GeneratorUpgrade) {}
-
-	// function buyManaCapUpgrade(upgrade: ManaCapUpgrade) {
-	// 	if (!canBuy(upgrade.price)) return;
-	// 	if (upgrade.amount + 1 > upgrade.cap) return;
-	// 	currentMana -= upgrade.price;
-	// 	upgrade.amount += 1;
-	// 	upgrade.price *= 2;
-	// 	upgrades = upgrades;
-	// }
-
-	// function isGenerator(upgrade: Upgrade): upgrade is GeneratorUpgrade {
-	// 	return (upgrade as GeneratorUpgrade).type === 'generator';
-	// }
-	// function isMagicCap(upgrade: Upgrade): upgrade is ManaCapUpgrade {
-	// 	return (upgrade as ManaCapUpgrade).type === 'magic cap';
-	// }
-
 	function buyUpgrade(upgrade: Upgrade) {
-		// if (isGenerator(upgrade)) return buyGeneratorUpgrade(upgrade);
-		// if (isMagicCap(upgrade)) return buyManaCapUpgrade(upgrade);
 		if (!canBuy(upgrade.price)) return;
 		if (upgrade.amount + 1 > upgrade.cap) return;
 		currentMana -= upgrade.price;
 		upgrade.amount += 1;
-		upgrade.price *= 2;
+		upgrade.price *= 1.5;
 		upgrades = upgrades;
 	}
 
 	function acquirePrestige(upgrade: typeof prestigeUpgrade) {
 		if (!canBuy(upgrade.price)) return;
 		currentMana -= prestigeUpgrade.price;
-		prestigeUpgrade.amount += 1;
+		prestigeUpgrade.amount += prestigeUpgrade.amount + 0.2;
 		upgrades = baseUpgrades.map((upgrade) => ({ ...upgrade }));
 		manaPerTick = 10;
+	}
+
+	function round(number: number) {
+		return Math.round(number * 10) / 10;
 	}
 
 	setInterval(generateManaPerTick, tickSpeed);
 </script>
 
+<h2 class="mb-4 text-lg">Current prestige power: {round(prestigeUpgrade.amount * 100)}%</h2>
+
 <div class="flex gap-4">
-	<div class="card h-fit w-48 items-center bg-base-100 p-10">
+	<div class="card h-fit w-60 items-center bg-base-100 p-10">
 		<h2 class="stat-title">Mana</h2>
-		<p class="stat-value">{currentMana}/{orbCap}</p>
-		<p class="stat-title">+{manaPerTick}/s</p>
+		<div
+			class="stat-value flex"
+			class:text-error={currentMana > orbCap || currentMana === orbCap}
+			class:text-warning={currentMana > orbCap * 0.8 && currentMana < orbCap}
+		>
+			{#key currentMana}
+				<p in:fly>{round(currentMana)}</p>
+			{/key}
+			<p>/{round(orbCap)}</p>
+		</div>
+		<p class="stat-title">+{round(manaPerTick)}/s</p>
 	</div>
 
 	<div class="flex flex-col gap-2">
 		{#each upgrades as upgrade}
 			<button
+				disabled={upgrade.price > currentMana || upgrade.amount === upgrade.cap}
 				on:click={() => buyUpgrade(upgrade)}
-				class=" tooltip tooltip-info btn flex h-20 w-28 flex-col justify-evenly"
+				class=" tooltip tooltip-info btn flex h-24 w-28 flex-col justify-evenly"
 				data-tip={upgrade.tooltip}
 			>
 				<p class="text-base">{upgrade.name}</p>
-				<p class="text-lg text-red-600">{upgrade.price}</p>
+				<p class="text-xl text-warning">{round(upgrade.price)}</p>
 				<p class="">{upgrade.amount}/{upgrade.cap}</p>
 			</button>
 		{/each}
 		<button
+			disabled={prestigeUpgrade.price > currentMana}
 			on:click={() => acquirePrestige(prestigeUpgrade)}
-			class=" tooltip tooltip-info btn flex h-20 w-28 flex-col justify-evenly"
+			class=" tooltip tooltip-info btn flex h-24 w-28 flex-col justify-evenly"
 			data-tip="reset game to gain bonus"
 		>
 			<p class="text-base">Prestige</p>
-			<p class="text-lg text-red-600">{prestigeUpgrade.price}</p>
+			<p class="text-xl text-error">{round(prestigeUpgrade.price)}</p>
 		</button>
 	</div>
 </div>
