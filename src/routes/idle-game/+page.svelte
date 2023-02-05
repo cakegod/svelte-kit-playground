@@ -17,6 +17,12 @@
 		capAmount: number;
 		type: 'mana cap';
 	}
+
+	interface Spell {
+		name: string;
+		manaCost: number;
+		effect: () => void;
+	}
 </script>
 
 <script lang="ts">
@@ -76,6 +82,10 @@
 		amount: 0
 	};
 
+	let knowledge = 0;
+	let knowledgeCap = 10;
+	let isKnowledgeUnlocked = false;
+
 	function generateManaPerTick() {
 		if (currentMana < orbCap) currentMana += manaPerTick;
 	}
@@ -105,33 +115,64 @@
 		return Math.round(number * 10) / 10;
 	}
 
+	function castSpell(spell: Spell) {
+		if (!canBuy(spell.manaCost)) return;
+		currentMana -= spell.manaCost;
+		spell.effect();
+	}
+
+	const spells = {
+		gainKnowledge: {
+			name: 'Gain knowledge',
+			manaCost: 50,
+			effect: () => {
+				knowledge += 1;
+			}
+		}
+	};
+
 	setInterval(generateManaPerTick, tickSpeed);
 </script>
 
 <h2 class="mb-4 text-lg">Current prestige power: {round(prestigeUpgrade.amount * 100)}%</h2>
 
 <div class="flex gap-4">
-	<div class="card h-fit w-60 items-center bg-base-100 p-10">
-		<h2 class="stat-title">Mana</h2>
-		<div
-			class="stat-value flex"
-			class:text-error={currentMana > orbCap || currentMana === orbCap}
-			class:text-warning={currentMana > orbCap * 0.8 && currentMana < orbCap}
-		>
-			{#key currentMana}
-				<p in:fly>{round(currentMana)}</p>
-			{/key}
-			<p>/{round(orbCap)}</p>
+	<!-- Mana -->
+	<div class="stats stats-vertical">
+		<div class="card h-fit w-60 items-center bg-base-100 p-10">
+			<h2 class="stat-title">Mana</h2>
+			<div
+				class="stat-value flex"
+				class:text-error={currentMana > orbCap || currentMana === orbCap}
+				class:text-warning={currentMana > orbCap * 0.8 && currentMana < orbCap}
+			>
+				{#key currentMana}
+					<p in:fly>{round(currentMana)}</p>
+				{/key}
+				<p>/{round(orbCap)}</p>
+			</div>
+			<p class="stat-title">+{round(manaPerTick)}/s</p>
 		</div>
-		<p class="stat-title">+{round(manaPerTick)}/s</p>
+		<!-- Knowledge -->
+		{#if isKnowledgeUnlocked}
+			<div class="card h-fit w-60 items-center bg-base-100 p-10">
+				<h2 class="stat-title">Knowledge</h2>
+				<div class="stat-value flex">
+					{#key knowledge}
+						<p in:fly>{round(knowledge)}</p>
+					{/key}
+					<p>/{round(knowledgeCap)}</p>
+				</div>
+			</div>{/if}
 	</div>
 
 	<div class="flex flex-col gap-2">
+		<h3 class="flex flex-col items-center font-bold text-base-content/70">Upgrades</h3>
 		{#each upgrades as upgrade}
 			<button
 				disabled={upgrade.price > currentMana || upgrade.amount === upgrade.cap}
 				on:click={() => buyUpgrade(upgrade)}
-				class=" tooltip tooltip-info btn flex h-24 w-28 flex-col justify-evenly"
+				class="tooltip tooltip-info btn flex h-24 w-28 flex-col justify-evenly"
 				data-tip={upgrade.tooltip}
 			>
 				<p class="text-base">{upgrade.name}</p>
@@ -142,11 +183,23 @@
 		<button
 			disabled={prestigeUpgrade.price > currentMana}
 			on:click={() => acquirePrestige(prestigeUpgrade)}
-			class=" tooltip tooltip-info btn flex h-24 w-28 flex-col justify-evenly"
-			data-tip="reset game to gain bonus"
+			class="tooltip tooltip-info btn flex h-24 w-28 flex-col justify-evenly"
+			data-tip={prestigeUpgrade.tooltip}
 		>
 			<p class="text-base">Prestige</p>
 			<p class="text-xl text-error">{round(prestigeUpgrade.price)}</p>
+		</button>
+	</div>
+	<div class="flex flex-col gap-2">
+		<h3 class="flex flex-col items-center font-bold text-base-content/70">Spells</h3>
+		<button
+			disabled={spells.gainKnowledge.manaCost > currentMana}
+			on:click={() => castSpell(spells.gainKnowledge)}
+			on:click|once={() => (isKnowledgeUnlocked = true)}
+			class="tooltip tooltip-info btn flex h-24 w-fit flex-col justify-evenly"
+		>
+			<p class="text-base">{spells.gainKnowledge.name}</p>
+			<p class="text-xl text-warning">{round(spells.gainKnowledge.manaCost)}</p>
 		</button>
 	</div>
 </div>
