@@ -69,43 +69,13 @@
 		{:else}
 			<button on:click={() => (isAddingTask = true)} class="btn-info btn"> + Add new task </button>
 		{/if}
-		{#if isAddingTask}
-			<form
-				transition:slide
-				on:submit={() => {
-					project.addTask(taskName, taskContent);
-					todo = todo;
-				}}
-				class="form-control rounded-box bg-base-300 p-4 shadow"
-			>
-				<button
-					on:click={() => (isAddingTask = false)}
-					type="button"
-					class="btn-error btn-xs btn w-6 self-end">x</button
-				>
-				<label class="form-control label items-start">
-					Task Name
-					<input required bind:value={taskName} class="input w-full" type="text" />
-				</label>
-				<label class="form-control label items-start">
-					Task Content
-					<textarea required bind:value={taskContent} class="textarea w-full" />
-				</label>
-				<button class="btn-success btn" type="submit">Add task</button>
-			</form>
-		{:else}
-			<button on:click={() => (isAddingTask = true)} class="btn-info btn"> + Add new task </button>
-		{/if}
 	</div>
 {/each}
 
 <style lang="postcss">
 	.bg-success {
-	.bg-success {
 		@apply bg-success/5;
 	}
-	.bg-warning {
-		@apply bg-warning/5;
 	.bg-warning {
 		@apply bg-warning/5;
 	}
