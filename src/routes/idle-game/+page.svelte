@@ -1,32 +1,6 @@
-<script lang="ts" context="module">
-	interface Upgrade {
-		name: string;
-		amount: number;
-		cap: number;
-		price: number;
-		type: string;
-		tooltip: string;
-	}
-
-	interface GeneratorUpgrade extends Upgrade {
-		generate: number;
-		type: 'generator';
-	}
-
-	interface ManaCapUpgrade extends Upgrade {
-		capAmount: number;
-		type: 'mana cap';
-	}
-
-	interface Spell {
-		name: string;
-		manaCost: number;
-		effect: () => void;
-	}
-</script>
-
 <script lang="ts">
 	import { fly } from 'svelte/transition';
+	import type { GeneratorUpgrade, ManaCapUpgrade, Resource, Spell, Upgrade } from './types';
 
 	const baseUpgrades: ReadonlyArray<Upgrade | GeneratorUpgrade | ManaCapUpgrade> = Object.freeze([
 		Object.freeze({
@@ -57,43 +31,43 @@
 			tooltip: 'increases mana cap by 200'
 		})
 	]);
-	let tickSpeed = 1000;
+	let tickSpeed = 100;
 
-	const resources = {
+	const resources: Record<string, Resource> = {
 		mana: {
 			current: 0,
 			baseCap: 50,
-			cap: 50
+			cap: 50,
+			basePerTick: 1,
+			perTick: 1
 		},
 		knowledge: {
 			current: 0,
 			baseCap: 10,
-			cap: 10
+			cap: 10,
+			basePerTick: 0,
+			perTick: 0
 		}
 	};
-	let baseOrbCap = 50;
-	let orbCap = baseOrbCap;
+
 	$: {
 		const nextCap =
-			baseOrbCap +
+			resources.mana.baseCap +
 			upgrades
 				.filter((upgrade): upgrade is ManaCapUpgrade => upgrade.type === 'mana cap')
 				.reduce((acc, curr) => (curr ? (acc += curr.amount * curr.capAmount) : acc), 0);
-		orbCap = nextCap;
+		resources.mana.cap = nextCap;
 	}
-	let baseManaPerTick = 1;
-	let manaPerTick = baseManaPerTick;
 	$: {
 		const nextManaPerTick =
-			baseManaPerTick +
+			resources.mana.basePerTick +
 			upgrades
 				.filter((upgrade): upgrade is GeneratorUpgrade => upgrade.type === 'generator')
 				.reduce((acc, curr) => (curr ? (acc += curr.amount * curr.generate) : acc), 0) *
 				(prestigeUpgrade.amount + 1);
-		manaPerTick = nextManaPerTick;
+		resources.mana.perTick = nextManaPerTick;
 	}
 
-	let currentMana = 0;
 	let upgrades: (GeneratorUpgrade | ManaCapUpgrade | Upgrade)[] = baseUpgrades.map((upgrade) => ({
 		...upgrade
 	}));
@@ -104,22 +78,21 @@
 		amount: 0
 	};
 
-	let knowledge = 0;
-	let knowledgeCap = 10;
 	let isKnowledgeUnlocked = false;
 
 	function generateManaPerTick() {
-		if (currentMana < orbCap) currentMana += manaPerTick;
+		if (resources.mana.current < resources.mana.cap)
+			resources.mana.current += resources.mana.perTick;
 	}
 
 	function canBuy(price: number) {
-		return price <= currentMana;
+		return price <= resources.mana.current;
 	}
 
 	function buyUpgrade(upgrade: Upgrade) {
 		if (!canBuy(upgrade.price)) return;
 		if (upgrade.amount + 1 > upgrade.cap) return;
-		currentMana -= upgrade.price;
+		resources.mana.current -= upgrade.price;
 		upgrade.amount += 1;
 		upgrade.price *= 1.5;
 		upgrades = upgrades;
@@ -127,10 +100,11 @@
 
 	function acquirePrestige(upgrade: typeof prestigeUpgrade) {
 		if (!canBuy(upgrade.price)) return;
-		currentMana -= prestigeUpgrade.price;
+		resources.mana.current -= prestigeUpgrade.price;
 		prestigeUpgrade.amount += prestigeUpgrade.amount + 0.2;
 		upgrades = baseUpgrades.map((upgrade) => ({ ...upgrade }));
-		manaPerTick = 10;
+		resources.mana.perTick = 10;
+		resources.knowledge.current = 0;
 	}
 
 	function round(number: number) {
@@ -139,7 +113,7 @@
 
 	function castSpell(spell: Spell) {
 		if (!canBuy(spell.manaCost)) return;
-		currentMana -= spell.manaCost;
+		resources.mana.current -= spell.manaCost;
 		spell.effect();
 	}
 
@@ -148,7 +122,7 @@
 			name: 'Gain knowledge',
 			manaCost: 100,
 			effect: () => {
-				knowledge += 1;
+				resources.knowledge.current += 1;
 			}
 		}
 	};
@@ -165,25 +139,27 @@
 			<h2 class="stat-title">Mana</h2>
 			<div
 				class="stat-value flex"
-				class:text-error={currentMana > orbCap || currentMana === orbCap}
-				class:text-warning={currentMana > orbCap * 0.8 && currentMana < orbCap}
+				class:text-error={resources.mana.current > resources.mana.cap ||
+					resources.mana.current === resources.mana.cap}
+				class:text-warning={resources.mana.current > resources.mana.cap * 0.8 &&
+					resources.mana.current < resources.mana.cap}
 			>
-				{#key currentMana}
-					<p in:fly>{round(currentMana)}</p>
+				{#key resources.mana.current}
+					<p in:fly>{round(resources.mana.current)}</p>
 				{/key}
-				<p>/{round(orbCap)}</p>
+				<p>/{round(resources.mana.cap)}</p>
 			</div>
-			<p class="stat-title">+{round(manaPerTick)}/s</p>
+			<p class="stat-title">+{round(resources.mana.perTick)}/s</p>
 		</div>
 		<!-- Knowledge -->
 		{#if isKnowledgeUnlocked}
 			<div class="card h-fit w-60 items-center bg-base-100 p-10">
 				<h2 class="stat-title">Knowledge</h2>
 				<div class="stat-value flex">
-					{#key knowledge}
-						<p in:fly>{round(knowledge)}</p>
+					{#key resources.knowledge.current}
+						<p in:fly>{round(resources.knowledge.current)}</p>
 					{/key}
-					<p>/{round(knowledgeCap)}</p>
+					<p>/{round(resources.knowledge.cap)}</p>
 				</div>
 			</div>{/if}
 	</div>
@@ -192,7 +168,7 @@
 		<h3 class="flex flex-col items-center font-bold text-base-content/70">Upgrades</h3>
 		{#each upgrades as upgrade}
 			<button
-				disabled={upgrade.price > currentMana || upgrade.amount === upgrade.cap}
+				disabled={upgrade.price > resources.mana.current || upgrade.amount === upgrade.cap}
 				on:click={() => buyUpgrade(upgrade)}
 				class="w-content tooltip tooltip-info btn flex h-24 flex-col justify-evenly"
 				data-tip={upgrade.tooltip}
@@ -203,7 +179,7 @@
 			</button>
 		{/each}
 		<button
-			disabled={prestigeUpgrade.price > currentMana}
+			disabled={prestigeUpgrade.price > resources.mana.current}
 			on:click={() => acquirePrestige(prestigeUpgrade)}
 			class="w-content tooltip tooltip-info btn flex h-24 flex-col justify-evenly"
 			data-tip={prestigeUpgrade.tooltip}
@@ -215,7 +191,7 @@
 	<div class="flex flex-col gap-2">
 		<h3 class="flex flex-col items-center font-bold text-base-content/70">Spells</h3>
 		<button
-			disabled={spells.gainKnowledge.manaCost > currentMana}
+			disabled={spells.gainKnowledge.manaCost > resources.mana.current}
 			on:click={() => castSpell(spells.gainKnowledge)}
 			on:click|once={() => (isKnowledgeUnlocked = true)}
 			class="w-content tooltip tooltip-info btn flex h-24 flex-col justify-evenly"
