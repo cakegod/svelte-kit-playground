@@ -36,7 +36,7 @@
 			generate: 1,
 			price: 5,
 			type: 'generator',
-			tooltip: 'generate 2 mana per second'
+			tooltip: 'increases mana regeneration by 1'
 		}),
 		Object.freeze({
 			name: 'focus',
@@ -45,10 +45,32 @@
 			capAmount: 10,
 			price: 15,
 			type: 'mana cap',
-			tooltip: 'increase mana cap by 20'
+			tooltip: 'increases mana cap by 10'
+		}),
+		Object.freeze({
+			name: 'Supreme focus',
+			amount: 0,
+			cap: 5,
+			capAmount: 10,
+			price: 1500,
+			type: 'mana cap',
+			tooltip: 'increases mana cap by 200'
 		})
 	]);
-	let tickSpeed = 100;
+	let tickSpeed = 1000;
+
+	const resources = {
+		mana: {
+			current: 0,
+			baseCap: 50,
+			cap: 50
+		},
+		knowledge: {
+			current: 0,
+			baseCap: 10,
+			cap: 10
+		}
+	};
 	let baseOrbCap = 50;
 	let orbCap = baseOrbCap;
 	$: {
@@ -124,7 +146,7 @@
 	const spells = {
 		gainKnowledge: {
 			name: 'Gain knowledge',
-			manaCost: 50,
+			manaCost: 100,
 			effect: () => {
 				knowledge += 1;
 			}
@@ -172,7 +194,7 @@
 			<button
 				disabled={upgrade.price > currentMana || upgrade.amount === upgrade.cap}
 				on:click={() => buyUpgrade(upgrade)}
-				class="tooltip tooltip-info btn flex h-24 w-28 flex-col justify-evenly"
+				class="w-content tooltip tooltip-info btn flex h-24 flex-col justify-evenly"
 				data-tip={upgrade.tooltip}
 			>
 				<p class="text-base">{upgrade.name}</p>
@@ -183,7 +205,7 @@
 		<button
 			disabled={prestigeUpgrade.price > currentMana}
 			on:click={() => acquirePrestige(prestigeUpgrade)}
-			class="tooltip tooltip-info btn flex h-24 w-28 flex-col justify-evenly"
+			class="w-content tooltip tooltip-info btn flex h-24 flex-col justify-evenly"
 			data-tip={prestigeUpgrade.tooltip}
 		>
 			<p class="text-base">Prestige</p>
@@ -196,7 +218,7 @@
 			disabled={spells.gainKnowledge.manaCost > currentMana}
 			on:click={() => castSpell(spells.gainKnowledge)}
 			on:click|once={() => (isKnowledgeUnlocked = true)}
-			class="tooltip tooltip-info btn flex h-24 w-fit flex-col justify-evenly"
+			class="w-content tooltip tooltip-info btn flex h-24 flex-col justify-evenly"
 		>
 			<p class="text-base">{spells.gainKnowledge.name}</p>
 			<p class="text-xl text-warning">{round(spells.gainKnowledge.manaCost)}</p>
