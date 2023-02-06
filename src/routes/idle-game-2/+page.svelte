@@ -1,12 +1,11 @@
 <script lang="ts">
+	import { IconMouse2 } from '@tabler/icons-svelte';
 	import Cell from './Cell.svelte';
 	import Cells from './Cells.svelte';
 	import { COLORS_NAME, CURRENCY_COLORS } from './data';
 	import { currency, Upgrade, upgrades } from './store';
 
 	let rawCurrency = 0;
-
-	setInterval(() => (rawCurrency += 1), 1000);
 
 	$: currency.updateCurrency(Math.round(rawCurrency));
 
@@ -25,7 +24,7 @@
 		);
 	}
 
-	function toCurrencyType(price: number, name?: boolean) {
+	function rawCurrencyToCurrencyColor(price: number, name?: boolean) {
 		const stringifiedPrice = String(price).split('');
 		if (name) {
 			return CURRENCY_COLORS.find(
@@ -48,10 +47,20 @@
 {/key}
 
 {#each $upgrades as upgrade}
-	<span class="badge-primary badge gap-1">
-		{toCurrencyType(upgrade.getPrice())}
-		<Cell color={toCurrencyType(upgrade.getPrice(), true)} /></span
-	>
-
-	<button on:click={() => buyUpgrade(upgrade)} class="btn flex flex-col"> Buy cursor </button>
+	<div class="flex flex-col items-center gap-1">
+		<div class="flex w-full justify-between">
+			<span class="badge badge-accent gap-1 font-bold">
+				{rawCurrencyToCurrencyColor(upgrade.getPrice())}
+				<Cell color={rawCurrencyToCurrencyColor(upgrade.getPrice(), true)} /></span
+			>
+			<span class="badge badge-accent font-bold">{upgrade.amount}</span>
+		</div>
+		<button
+			disabled={upgrade.price > rawCurrency}
+			on:click={() => buyUpgrade(upgrade)}
+			class="rounded-box btn flex h-20 w-20 flex-col gap-2"
+		>
+			<IconMouse2 size={34} />
+		</button>
+	</div>
 {/each}
