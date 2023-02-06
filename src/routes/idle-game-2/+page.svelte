@@ -2,8 +2,10 @@
 	import { IconMouse2 } from '@tabler/icons-svelte';
 	import Cell from './Cell.svelte';
 	import Cells from './Cells.svelte';
+	import Tooltip from './Tooltip.svelte';
 	import { COLORS_NAME, CURRENCY_COLORS } from './data';
 	import { currency, Upgrade, upgrades } from './store';
+	import { slide } from 'svelte/transition';
 
 	let rawCurrency = 0;
 
@@ -55,12 +57,30 @@
 			>
 			<span class="badge-accent badge font-bold">{upgrade.amount}</span>
 		</div>
-		<button
-			disabled={upgrade.price > rawCurrency}
-			on:click={() => buyUpgrade(upgrade)}
-			class="rounded-box btn flex h-20 w-20 flex-col gap-2"
-		>
-			<IconMouse2 size={34} />
-		</button>
+		<Tooltip title="aa">
+			<button
+				disabled={upgrade.getPrice() > rawCurrency}
+				on:click={() => buyUpgrade(upgrade)}
+				class="rounded-box btn flex h-20 w-20 flex-col gap-2"
+			>
+				<IconMouse2 size={34} />
+			</button>
+
+			<div
+				transition:slide
+				slot="tooltip-content"
+				class="rounded-box absolute flex w-52 -translate-x-1/2 flex-col gap-1 bg-primary/25 p-4 text-primary-content shadow"
+			>
+				<p>Creates a cursor that automatically presses the button every 2 seconds</p>
+				<div>
+					<p class="font-bold text-primary-content/75">
+						{`Cursors: ${upgrade.amount} -> ${upgrade.amount + 1}`}
+					</p>
+					<!-- <p class="font-bold text-primary-content/75">
+						{`Click power: ${upgrade.power} -> ${upgrade.power}`}
+					</p> -->
+				</div>
+			</div>
+		</Tooltip>
 	</div>
 {/each}
