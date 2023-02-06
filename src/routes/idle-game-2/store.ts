@@ -50,12 +50,12 @@ export class Upgrade {
 	}
 
 	getPrice() {
-		return this.price * this.priceMultiplier ** this.amount;
+		return Math.round(this.price * this.priceMultiplier ** this.amount);
 	}
 }
 
 function createUpgradesStore() {
-	const { subscribe, update } = writable([new Upgrade('cursor', 10, 1, 1.5, 2000)]);
+	const { subscribe, update } = writable([new Upgrade('cursor', 1, 1, 1.5, 2000)]);
 
 	return {
 		subscribe,
