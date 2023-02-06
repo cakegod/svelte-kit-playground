@@ -3,8 +3,9 @@
 	import Cell from './Cell.svelte';
 	import Tooltip from './Tooltip.svelte';
 	import { COLORS_NAME, CURRENCY_COLORS } from './data';
-	import { rawCurrency, Upgrade, upgrades } from './store';
+	import { rawCurrency, upgrades } from './store';
 	import { slide } from 'svelte/transition';
+	import type { Upgrade } from './classes';
 
 	function rawCurrencyToCurrencyColor(price: number, name?: boolean) {
 		const stringifiedPrice = String(price).split('');
@@ -23,8 +24,14 @@
 		upgrades.update(
 			$upgrades.map((u) => {
 				if (u.name === upgrade.name) {
-					upgrade.amount += 1;
-					upgrade.amount % 3 === 0 && (upgrade.power += 1);
+					if (upgrade.level > 0 && upgrade.level % 4 === 0) {
+						upgrade.amount -= 1;
+						upgrade.power += 10;
+					} else {
+						upgrade.amount += 1;
+					}
+
+					upgrade.level += 1;
 
 					return upgrade;
 				}
@@ -60,11 +67,13 @@
 				<p>Creates a cursor that automatically presses the button every 2 seconds</p>
 				<div>
 					<p class="font-bold text-primary-content/75">
-						{`Cursors: ${upgrade.amount} -> ${upgrade.amount + 1}`}
+						{`Cursors: ${upgrade.amount} -> ${
+							upgrade.level % 4 === 0 ? upgrade.amount - 1 : upgrade.amount + 1
+						}`}
 					</p>
 					<p class="font-bold text-primary-content/75">
 						{`Click power: ${upgrade.power} -> ${
-							upgrade.amount % 3 === 0 ? upgrade.power + 1 : upgrade.power
+							upgrade.level % 4 === 0 ? upgrade.power + 1 : upgrade.power
 						}`}
 					</p>
 				</div>
