@@ -14,17 +14,21 @@
 	let totalTime = 0;
 
 	onMount(() => {
-		setInterval(() => {
-			const currentTime = Date.now();
-			if (!lastTime) {
+		function gameLoop() {
+			requestAnimationFrame(() => {
+				const currentTime = Date.now();
+				if (!lastTime) {
+					lastTime = currentTime;
+				}
+				const deltaTime = currentTime - lastTime;
+				totalTime += deltaTime;
 				lastTime = currentTime;
-			}
-			const deltaTime = currentTime - lastTime;
-			totalTime += deltaTime;
-			lastTime = currentTime;
-			updateGame(deltaTime, totalTime);
-			console.log('delta:' + deltaTime, 'total:' + totalTime);
-		}, 1000 / 15);
+				updateGame(deltaTime, totalTime);
+				requestAnimationFrame(gameLoop);
+				console.log('delta:' + deltaTime, 'total:' + totalTime);
+			});
+		}
+		gameLoop();
 	});
 
 	function updateGame(deltaTime: number, totalTime: number) {
