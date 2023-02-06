@@ -6,15 +6,40 @@
 	import { COLORS_NAME, CURRENCY_COLORS } from './data';
 	import { currency, Upgrade, upgrades } from './store';
 	import { slide } from 'svelte/transition';
+	import { onMount } from 'svelte';
 
 	let rawCurrency = 0;
 
+	let lastTime: number;
+	let totalTime = 0;
+
+	onMount(() => {
+		setInterval(() => {
+			const currentTime = Date.now();
+			if (!lastTime) {
+				lastTime = currentTime;
+			}
+			const deltaTime = currentTime - lastTime;
+			totalTime += deltaTime;
+			lastTime = currentTime;
+			updateGame(deltaTime, totalTime);
+			console.log('delta:' + deltaTime, 'total:' + totalTime);
+		}, 1000 / 15);
+	});
+
+	function updateGame(deltaTime: number, totalTime: number) {
+		// rawCurrency += (deltaTime / 1000) * 1;
+
+		rawCurrency += $upgrades.reduce((acc, curr) => {
+			return (acc += (curr.amount * curr.power * deltaTime) / curr.interval);
+		}, 0);
+	}
 	$: currency.updateCurrency(Math.round(rawCurrency));
 
 	function buyUpgrade(upgrade: Upgrade) {
 		if (rawCurrency < upgrade.getPrice()) return;
 		rawCurrency -= upgrade.getPrice();
-		setInterval(() => (rawCurrency += upgrade.power), upgrade.interval);
+
 		upgrades.update(
 			$upgrades.map((u) => {
 				if (u.name === upgrade.name) {
@@ -43,10 +68,9 @@
 	{/each}
 </div>
 
-<h2>{rawCurrency}</h2>
-{#key rawCurrency}
-	<button class="btn-error btn-lg btn m-4" on:click={() => (rawCurrency += 1)}>Click</button>
-{/key}
+<!-- {#key rawCurrency} -->
+<button class="btn-error btn-lg btn m-4" on:click={() => (rawCurrency += 1)}>Click</button>
+<!-- {/key} -->
 
 {#each $upgrades as upgrade}
 	<div class="flex flex-col items-center gap-1">
@@ -57,7 +81,7 @@
 			>
 			<span class="badge-accent badge font-bold">{upgrade.amount}</span>
 		</div>
-		<Tooltip title="aa">
+		<Tooltip>
 			<button
 				disabled={upgrade.getPrice() > rawCurrency}
 				on:click={() => buyUpgrade(upgrade)}

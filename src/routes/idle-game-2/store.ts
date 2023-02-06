@@ -20,7 +20,6 @@ function createCurrencyStore() {
 				(Object.keys(currency) as (keyof typeof currency)[]).forEach((currencyType, index) => {
 					return (clone[currencyType] = stringCurrency[index] ? stringCurrency[index] : '0');
 				});
-				console.log(clone);
 
 				return clone;
 			})
