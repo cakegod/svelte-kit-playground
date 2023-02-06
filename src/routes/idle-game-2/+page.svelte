@@ -1,33 +1,46 @@
 <script lang="ts">
+	import Cell from './Cell.svelte';
 	import Cells from './Cells.svelte';
-	import { currency } from './store';
+	import { CELL_COLORS, RED } from './data';
+	import { currency, Upgrade, upgrades } from './store';
 
 	let currentCurrency = 0;
 
-	const cellColors: {
-		name: keyof typeof $currency;
-		filled: `bg-${keyof typeof $currency}-500`;
-		empty: `bg-${keyof typeof $currency}-900`;
-	}[] = [
-		{ name: 'red', filled: 'bg-red-500', empty: 'bg-red-900' },
-		{ name: 'orange', filled: 'bg-orange-500', empty: 'bg-orange-900' },
-		{ name: 'yellow', filled: 'bg-yellow-500', empty: 'bg-yellow-900' },
-		{ name: 'green', filled: 'bg-green-500', empty: 'bg-green-900' },
-		{ name: 'blue', filled: 'bg-blue-500', empty: 'bg-blue-900' },
-		{ name: 'indigo', filled: 'bg-indigo-500', empty: 'bg-indigo-900' },
-		{ name: 'violet', filled: 'bg-violet-500', empty: 'bg-violet-900' }
-	];
+	setInterval(() => (currentCurrency += 1), 1000);
 
-	setInterval(() => (currentCurrency += 10), 1);
+	$: currency.updateCurrency(Math.round(currentCurrency));
+	$: console.log(currentCurrency);
 
-	$: currency.updateCurrency(currentCurrency);
+	function buyUpgrade(upgrade: Upgrade) {
+		if (currentCurrency < upgrade.getPrice()) return;
+		currentCurrency -= upgrade.getPrice();
+		setInterval(() => (currentCurrency += upgrade.power), upgrade.interval);
+		upgrades.update(
+			$upgrades.map((u) => {
+				if (u.name === upgrade.name) {
+					upgrade.amount += 1;
+					return upgrade;
+				}
+				return u;
+			})
+		);
+	}
 </script>
 
 <div class="flex gap-4">
-	{#each cellColors as color}
-		<Cells filledColor={color.filled} emptyColor={color.empty} color={color.name} />
+	{#each CELL_COLORS as { color, filled: filledColor, empty: emptyColor }}
+		<Cells {filledColor} {emptyColor} {color} />
 	{/each}
 </div>
 
 <h2>{currentCurrency}</h2>
-<button class="btn m-4" on:click={() => (currentCurrency += 1)}>Click</button>
+{#key currentCurrency}
+	<button class="btn-error btn-lg btn m-4" on:click={() => (currentCurrency += 1)}>Click</button>
+{/key}
+
+{#each $upgrades as upgrade}
+	<Cell color={RED.filled} />
+	<span class="badge-primary badge">{upgrade.getPrice()}</span>
+
+	<button on:click={() => buyUpgrade(upgrade)} class="btn flex flex-col"> Buy cursor </button>
+{/each}
