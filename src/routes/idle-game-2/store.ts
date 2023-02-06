@@ -1,15 +1,5 @@
 import { writable } from 'svelte/store';
 
-// export const currency = writable({
-// 	red: '5',
-// 	orange: '0',
-// 	yellow: '0',
-// 	green: '0',
-// 	blue: '0',
-// 	indigo: '0',
-// 	violet: '0'
-// });
-
 function createCurrencyStore() {
 	const { subscribe, update } = writable({
 		red: '5',
@@ -30,9 +20,48 @@ function createCurrencyStore() {
 				(Object.keys(currency) as (keyof typeof currency)[]).forEach((currencyType, index) => {
 					return (clone[currencyType] = stringCurrency[index] ? stringCurrency[index] : '0');
 				});
+				console.log(clone);
+				
 				return clone;
 			})
 	};
 }
 
+export class Upgrade {
+	name: string;
+	amount: number;
+	price: number;
+	power: number;
+	priceMultiplier: number;
+	interval: number;
+	constructor(
+		name: string,
+		price: number,
+		power: number,
+		priceMultiplier: number,
+		interval: number
+	) {
+		this.name = name;
+		this.amount = 0;
+		this.price = price;
+		this.power = power;
+		this.priceMultiplier = priceMultiplier;
+		this.interval = interval;
+	}
+
+	getPrice() {
+		return this.price * this.priceMultiplier ** this.amount;
+	}
+}
+
+function createUpgradesStore() {
+	const { subscribe, update } = writable([new Upgrade('cursor', 10, 1, 1.5, 2000)]);
+
+	return {
+		subscribe,
+		update: (next: Upgrade[]) => update((u) => (u = next))
+	};
+}
+
 export const currency = createCurrencyStore();
+export const upgrades = createUpgradesStore();
