@@ -24,7 +24,7 @@
 </script>
 
 <nav class="navbar rounded-box max-w-screen-2xl bg-accent text-accent-content xl:mx-auto">
-	<div class=" navbar-start dropdown">
+	<div class=" dropdown navbar-start">
 		<button class="btn-ghost btn flex flex-wrap">
 			<IconAlignJustified />
 		</button>
