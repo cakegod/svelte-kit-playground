@@ -24,8 +24,7 @@
 				totalTime += deltaTime;
 				lastTime = currentTime;
 				updateGame(deltaTime, totalTime);
-				requestAnimationFrame(gameLoop);
-				console.log('delta:' + deltaTime, 'total:' + totalTime);
+				setTimeout(() => requestAnimationFrame(gameLoop), 1000 / 30);
 			});
 		}
 		gameLoop();
@@ -48,6 +47,8 @@
 			$upgrades.map((u) => {
 				if (u.name === upgrade.name) {
 					upgrade.amount += 1;
+					upgrade.amount % 3 === 0 && (upgrade.power += 1);
+
 					return upgrade;
 				}
 				return u;
@@ -104,9 +105,11 @@
 					<p class="font-bold text-primary-content/75">
 						{`Cursors: ${upgrade.amount} -> ${upgrade.amount + 1}`}
 					</p>
-					<!-- <p class="font-bold text-primary-content/75">
-						{`Click power: ${upgrade.power} -> ${upgrade.power}`}
-					</p> -->
+					<p class="font-bold text-primary-content/75">
+						{`Click power: ${upgrade.power} -> ${
+							upgrade.amount % 3 === 0 ? upgrade.power + 1 : upgrade.power
+						}`}
+					</p>
 				</div>
 			</div>
 		</Tooltip>
