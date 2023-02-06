@@ -49,11 +49,11 @@
 {#each $upgrades as upgrade}
 	<div class="flex flex-col items-center gap-1">
 		<div class="flex w-full justify-between">
-			<span class="badge badge-accent gap-1 font-bold">
+			<span class="badge-accent badge gap-1 font-bold">
 				{rawCurrencyToCurrencyColor(upgrade.getPrice())}
 				<Cell color={rawCurrencyToCurrencyColor(upgrade.getPrice(), true)} /></span
 			>
-			<span class="badge badge-accent font-bold">{upgrade.amount}</span>
+			<span class="badge-accent badge font-bold">{upgrade.amount}</span>
 		</div>
 		<button
 			disabled={upgrade.price > rawCurrency}

@@ -21,7 +21,7 @@ function createCurrencyStore() {
 					return (clone[currencyType] = stringCurrency[index] ? stringCurrency[index] : '0');
 				});
 				console.log(clone);
-				
+
 				return clone;
 			})
 	};

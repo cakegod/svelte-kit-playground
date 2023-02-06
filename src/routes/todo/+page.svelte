@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Todo } from './classes';
-	import { crossfade, slide } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 
 	let todo = new Todo();
 	let isAddingTask = false;
@@ -14,7 +14,7 @@
 		{#each project.tasks as task (task.id)}
 			<div
 				transition:slide
-				class="card-compact card grow bg-base-300 shadow"
+				class="card card-compact grow bg-base-300 shadow"
 				class:bg-success={task.done}
 				class:bg-warning={!task.done}
 			>
