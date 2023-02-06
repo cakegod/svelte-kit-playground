@@ -62,5 +62,16 @@ function createUpgradesStore() {
 	};
 }
 
+function createRawCurrencyStore() {
+	const { subscribe, update } = writable(0);
+
+	return {
+		subscribe,
+		decrease: (amount: number) => update((c) => (c -= amount)),
+		increase: (amount: number) => update((c) => (c += amount))
+	};
+}
+
+export const rawCurrency = createRawCurrencyStore();
 export const currency = createCurrencyStore();
 export const upgrades = createUpgradesStore();
