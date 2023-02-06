@@ -46,6 +46,19 @@ function createRawCurrencyStore() {
 	};
 }
 
+function createExperienceStore() {
+	const { subscribe, update } = writable({
+		cursor: 0
+	});
+
+	return {
+		subscribe,
+		decreaseCursors: (amount: number) => update((e) => ({ ...e, cursor: e.cursor - amount })),
+		increaseCursor: (amount: number) => update((e) => ({ ...e, cursor: e.cursor + amount }))
+	};
+}
+
 export const rawCurrency = createRawCurrencyStore();
 export const currency = createCurrencyStore();
 export const upgrades = createUpgradesStore();
+export const experience = createExperienceStore();
