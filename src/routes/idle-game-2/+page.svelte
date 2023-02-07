@@ -8,30 +8,25 @@
 
 	onMount(() => {
 		game = (() => {
-			let lastTime: number;
-			let totalTime = 0;
+			// let lastTime: number;
+			// let totalTime = 0;
 			function gameLoop() {
 				requestAnimationFrame(() => {
-					const currentTime = Date.now();
-					if (!lastTime) {
-						lastTime = currentTime;
-					}
-					const deltaTime = currentTime - lastTime;
-					totalTime += deltaTime;
-					lastTime = currentTime;
+					// const currentTime = Date.now();
+					// if (!lastTime) {
+					// 	lastTime = currentTime;
+					// }
+					// const deltaTime = currentTime - lastTime;
+					// totalTime += deltaTime;
+					// lastTime = currentTime;
 					// updateGame(deltaTime, totalTime);
-					currency.updateCurrency(Math.round($rawCurrency))
-					setTimeout(gameLoop, 1000 / 30)
+					updateGame();
+					setTimeout(gameLoop, 1000 / 30);
 				});
 			}
 
-			function updateGame(deltaTime: number, totalTime: number) {
-				// rawCurrency.increase(
-				// 	$upgrades.reduce(
-				// 		(acc, curr) => (acc += (curr.amount * curr.power * deltaTime) / curr.interval),
-				// 		0
-				// 	)
-				// );
+			function updateGame() {
+				currency.updateCurrency(Math.round($rawCurrency));
 			}
 
 			return {
@@ -40,13 +35,9 @@
 		})();
 		game.gameLoop();
 	});
-
-	$: console.log($rawCurrency);
 </script>
 
 <Cells />
-
-<p>Experience {$experience.cursor}</p>
 
 <button class="btn-error btn-lg btn m-4" on:click={() => rawCurrency.increase(1)}>Click</button>
 
