@@ -2,7 +2,6 @@
 	import Upgrades from './Upgrades.svelte';
 	import Cells from './Cells.svelte';
 	import { currency, experience, rawCurrency } from './store';
-	import { CURRENCY_COLORS } from './data';
 	import { onMount } from 'svelte';
 
 	let game;
@@ -20,8 +19,9 @@
 					const deltaTime = currentTime - lastTime;
 					totalTime += deltaTime;
 					lastTime = currentTime;
-					updateGame(deltaTime, totalTime);
-					setTimeout(() => requestAnimationFrame(gameLoop), 1000 / 30);
+					// updateGame(deltaTime, totalTime);
+					currency.updateCurrency(Math.round($rawCurrency))
+					setTimeout(gameLoop, 1000 / 30)
 				});
 			}
 
@@ -41,16 +41,10 @@
 		game.gameLoop();
 	});
 
-	// Update when rawCurrency changes
-	$: currency.updateCurrency(Math.round($rawCurrency));
 	$: console.log($rawCurrency);
 </script>
 
-<div class="flex gap-4">
-	{#each CURRENCY_COLORS as { color, filled, empty }}
-		<Cells filledColor={filled} emptyColor={empty} {color} />
-	{/each}
-</div>
+<Cells />
 
 <p>Experience {$experience.cursor}</p>
 
