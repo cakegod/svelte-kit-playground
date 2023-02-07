@@ -3,6 +3,7 @@
 	import Cells from './Cells.svelte';
 	import { currency, rawCurrency } from './store';
 	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
 
 	let game;
 
@@ -39,10 +40,13 @@
 
 <Cells />
 
-{#key $rawCurrency}
-	<button class="btn-error btn-lg btn my-8" on:click={() => rawCurrency.increase(1)}>
-		Click the button!
-	</button>
-{/key}
+<div class="my-8 flex flex-col items-center gap-8">
+	{#key $rawCurrency}
+		<p in:fly={{ y: -20, duration: 500 }} class="text-6xl font-bold">{$rawCurrency}</p>
+		<button class="btn-error btn-lg btn" on:click={() => rawCurrency.increase(1)}>
+			Click the button!
+		</button>
+	{/key}
+</div>
 
 <Upgrades />
