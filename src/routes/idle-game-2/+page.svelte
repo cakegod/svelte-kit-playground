@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Upgrades from './Upgrades.svelte';
 	import Cells from './Cells.svelte';
-	import { currency, experience, rawCurrency } from './store';
+	import { currency, rawCurrency } from './store';
 	import { onMount } from 'svelte';
 
 	let game;
@@ -39,6 +39,10 @@
 
 <Cells />
 
-<button class="btn-error btn-lg btn m-4" on:click={() => rawCurrency.increase(1)}>Click</button>
+{#key $rawCurrency}
+	<button class="btn-error btn-lg btn my-8" on:click={() => rawCurrency.increase(1)}>
+		Click the button!
+	</button>
+{/key}
 
 <Upgrades />
