@@ -22,7 +22,7 @@
 					// lastTime = currentTime;
 					// updateGame(deltaTime, totalTime);
 					updateGame();
-					setTimeout(gameLoop, 1000 / 30);
+					gameLoop()
 				});
 			}
 
