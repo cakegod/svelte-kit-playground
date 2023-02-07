@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { IconMouse2 } from '@tabler/icons-svelte';
+	import { IconMouse2, IconPlant, IconSeeding, IconTree, IconTrees } from '@tabler/icons-svelte';
 	import Cell from './Cell.svelte';
 	import Tooltip from './Tooltip.svelte';
 	import { COLORS_NAME, CURRENCY_COLORS } from './data';
@@ -15,9 +15,12 @@
 		}
 		return `${stringifiedPrice[0]}${stringifiedPrice[0 + 1] ? '.' + stringifiedPrice[0 + 1] : ''}`;
 	}
+
+	const capitalizeFirstLetter = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
+	const iconSize = 45;
 </script>
 
-<div class="flex gap-4">
+<div class="flex gap-6">
 	{#each $upgrades as upgrade}
 		<div class="flex flex-col items-center gap-1">
 			<div class="flex w-full justify-between">
@@ -32,9 +35,19 @@
 				<button
 					disabled={upgrade.getPrice() > $rawCurrency}
 					on:click={() => upgrade.buyUpgrade()}
-					class="rounded-box btn flex h-20 w-20 flex-col gap-2"
+					class="rounded-box btn flex h-24 w-24 flex-col gap-2"
 				>
-					<IconMouse2 size={34} />
+					{#if upgrade.name === 'cursor'}
+						<IconMouse2 size={iconSize} />
+					{:else if upgrade.name === 'seedling'}
+						<IconSeeding size={iconSize} />
+					{:else if upgrade.name === 'plant'}
+						<IconPlant size={iconSize} />
+					{:else if upgrade.name === 'tree'}
+						<IconTree size={iconSize} />
+					{:else if upgrade.name === 'forest'}
+						<IconTrees size={iconSize} />
+					{/if}
 				</button>
 				<progress
 					class="w-content progress"
@@ -46,18 +59,18 @@
 				<div
 					transition:slide
 					slot="tooltip-content"
-					class="rounded-box absolute flex w-52 -translate-x-1/2 flex-col gap-1 bg-primary/25 p-4 text-primary-content shadow"
+					class="rounded-box absolute flex w-60 -translate-x-1/2 flex-col gap-1 bg-primary/25 p-4 text-primary-content shadow"
 				>
-					<p>Creates a cursor that automatically presses the button every 2 seconds</p>
+					<p>{upgrade.tooltip}</p>
 					<div>
 						<p class="font-bold text-primary-content/75">
-							{`Cursors: ${upgrade.amount} -> ${
-								upgrade.level % 4 === 0 ? upgrade.amount - 1 : upgrade.amount + 1
+							{`${capitalizeFirstLetter(upgrade.name)}s: ${upgrade.amount} -> ${
+								upgrade.getNextLevelInfo().amount
 							}`}
 						</p>
 						<p class="font-bold text-primary-content/75">
-							{`Click power: ${upgrade.power} -> ${
-								upgrade.level % 4 === 0 ? upgrade.power + 1 : upgrade.power
+							{`${capitalizeFirstLetter(upgrade.name)} power: ${upgrade.power} -> ${
+								upgrade.getNextLevelInfo().power
 							}`}
 						</p>
 					</div>

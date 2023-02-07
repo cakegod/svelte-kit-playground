@@ -3,7 +3,7 @@ import { Upgrade, UPGRADES_LIST } from './classes';
 
 function createCurrencyStore() {
 	const { subscribe, update } = writable({
-		red: '5',
+		red: '0',
 		orange: '0',
 		yellow: '0',
 		green: '0',
