@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Upgrades from './Upgrades.svelte';
-	import Cells from './Cells.svelte';
-	import { currency, rawCurrency } from './store';
+	import Upgrades from './components/Upgrades.svelte';
+	import Cells from './components/Cells.svelte';
+	import { currency, rawCurrency } from './stores';
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 
@@ -22,7 +22,7 @@
 					// lastTime = currentTime;
 					// updateGame(deltaTime, totalTime);
 					updateGame();
-					gameLoop()
+					gameLoop();
 				});
 			}
 

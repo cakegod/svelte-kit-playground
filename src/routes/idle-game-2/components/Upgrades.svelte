@@ -2,8 +2,8 @@
 	import { IconMouse2, IconPlant, IconSeeding, IconTree, IconTrees } from '@tabler/icons-svelte';
 	import Cell from './Cell.svelte';
 	import Tooltip from './Tooltip.svelte';
-	import { COLORS_NAME, CURRENCY_COLORS } from './data';
-	import { rawCurrency, upgrades } from './store';
+	import { COLORS_NAME, CURRENCY_COLORS } from '../data/colors';
+	import { rawCurrency, upgrades } from '../stores';
 	import { slide } from 'svelte/transition';
 
 	function rawCurrencyToCurrencyColor(price: number, name?: boolean) {

@@ -1,5 +1,5 @@
 import { get } from 'svelte/store';
-import { experience, rawCurrency, upgrades } from './store';
+import { rawCurrency, upgrades } from '../stores';
 
 export class Upgrade {
 	level: number;

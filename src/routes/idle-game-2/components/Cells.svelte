@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { CURRENCY_COLORS } from '../data/colors';
+	import { currency } from '../stores';
 	import Cell from './Cell.svelte';
-	import { CURRENCY_COLORS } from './data';
-	import { currency } from './store';
 </script>
 
 <div class="flex flex-col-reverse">
