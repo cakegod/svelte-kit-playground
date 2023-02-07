@@ -26,7 +26,7 @@
 			<div class="flex w-full justify-between">
 				<span class="badge-accent badge gap-1 font-bold">
 					{rawCurrencyToCurrencyColor(upgrade.getPrice())}
-					<Cell color={rawCurrencyToCurrencyColor(upgrade.getPrice(), true)} size="w-4 h-4" /></span
+					<Cell color={rawCurrencyToCurrencyColor(upgrade.getPrice(), true)} size="badge" /></span
 				>
 				<span class="badge-accent badge font-bold">{upgrade.level}</span>
 			</div>

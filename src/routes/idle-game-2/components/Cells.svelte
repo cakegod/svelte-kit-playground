@@ -8,7 +8,7 @@
 	{#each CURRENCY_COLORS as { color, filled, empty }}
 		<div class="flex">
 			{#each Array(10) as _, index}
-				<Cell color={index < Number($currency[color]) ? filled : empty} size="w-7 h-7" />
+				<Cell color={index < Number($currency[color]) ? filled : empty} />
 			{/each}
 		</div>
 	{/each}
