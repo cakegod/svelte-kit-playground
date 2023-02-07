@@ -4,11 +4,11 @@
 	import { currency } from './store';
 </script>
 
-<div class="flex ">
+<div class="flex flex-col-reverse">
 	{#each CURRENCY_COLORS as { color, filled, empty }}
-		<div class="flex flex-col-reverse ">
+		<div class="flex">
 			{#each Array(10) as _, index}
-				<Cell color={index < Number($currency[color]) ? filled : empty} size="w-8 h-8" />
+				<Cell color={index < Number($currency[color]) ? filled : empty} size="w-7 h-7" />
 			{/each}
 		</div>
 	{/each}
