@@ -99,7 +99,7 @@ const CURSOR: Upgrade = new Upgrade({
 	name: 'cursor',
 	price: 5,
 	power: 1,
-	priceMultiplier: 1.5,
+	priceMultiplier: 1.3,
 	interval: 1000,
 	tooltip: 'Creates a cursor that automatically presses the button every second'
 });
@@ -107,7 +107,7 @@ const SEEDLING: Upgrade = new Upgrade({
 	name: 'seedling',
 	price: 25,
 	power: 20,
-	priceMultiplier: 1.5,
+	priceMultiplier: 1.3,
 	interval: 2000,
 	tooltip: 'Plants a seedling that automatically presses the button every 2 seconds'
 });
@@ -115,7 +115,7 @@ const PLANT: Upgrade = new Upgrade({
 	name: 'plant',
 	price: 200,
 	power: 100,
-	priceMultiplier: 1.5,
+	priceMultiplier: 1.3,
 	interval: 5000,
 	tooltip: 'Plants a plant that automatically presses the button every 5 seconds'
 });
@@ -123,7 +123,7 @@ const TREE: Upgrade = new Upgrade({
 	name: 'tree',
 	price: 1000,
 	power: 500,
-	priceMultiplier: 1.5,
+	priceMultiplier: 1.3,
 	interval: 10000,
 	tooltip: 'Plants a tree that automatically presses the button every 10 seconds'
 });
@@ -131,7 +131,7 @@ const FOREST: Upgrade = new Upgrade({
 	name: 'forest',
 	price: 5000,
 	power: 2500,
-	priceMultiplier: 1.5,
+	priceMultiplier: 1.3,
 	interval: 25000,
 	tooltip: 'Plants a forest that automatically presses the button every 25 seconds'
 });
