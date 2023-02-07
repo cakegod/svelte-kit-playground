@@ -20,13 +20,13 @@
 	const iconSize = 45;
 </script>
 
-<div class="flex gap-6">
+<div class="flex flex-wrap gap-6">
 	{#each $upgrades as upgrade}
 		<div class="flex flex-col items-center gap-1">
 			<div class="flex w-full justify-between">
 				<span class="badge-accent badge gap-1 font-bold">
 					{rawCurrencyToCurrencyColor(upgrade.getPrice())}
-					<Cell color={rawCurrencyToCurrencyColor(upgrade.getPrice(), true)} /></span
+					<Cell color={rawCurrencyToCurrencyColor(upgrade.getPrice(), true)} size="w-4 h-4" /></span
 				>
 				<span class="badge-accent badge font-bold">{upgrade.level}</span>
 			</div>
@@ -59,7 +59,7 @@
 				<div
 					transition:slide
 					slot="tooltip-content"
-					class="rounded-box absolute flex w-60 -translate-x-1/2 flex-col gap-1 bg-primary/25 p-4 text-primary-content shadow"
+					class="rounded-box absolute flex w-60 -translate-x-1/2 flex-col gap-1 bg-primary p-4 text-primary-content shadow"
 				>
 					<p>{upgrade.tooltip}</p>
 					<div>

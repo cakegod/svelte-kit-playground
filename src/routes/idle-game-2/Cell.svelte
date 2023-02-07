@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let color: string;
+	export let color: string, size: string;
 </script>
 
-<div class={`h-5 w-5 border border-gray-900 ${color}`} />
+<div class={`${size} border border-gray-900 ${color}`} />
