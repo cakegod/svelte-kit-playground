@@ -18,10 +18,18 @@
 
 	const capitalizeFirstLetter = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 	const iconSize = 45;
+
+	const upgradeIcons = [
+		{ name: 'cursor', component: IconMouse2 },
+		{ name: 'seedling', component: IconSeeding },
+		{ name: 'plant', component: IconPlant },
+		{ name: 'tree', component: IconTree },
+		{ name: 'forest', component: IconTrees }
+	];
 </script>
 
 <div class="flex flex-wrap gap-6">
-	{#each $upgrades as upgrade}
+	{#each $upgrades as upgrade, i}
 		<div class="flex flex-col items-center gap-1">
 			<div class="flex w-full justify-between">
 				<span class="badge-accent badge gap-1 font-bold">
@@ -37,17 +45,7 @@
 					on:click={() => upgrade.buyUpgrade()}
 					class="rounded-box btn flex h-24 w-24 flex-col gap-2"
 				>
-					{#if upgrade.name === 'cursor'}
-						<IconMouse2 size={iconSize} />
-					{:else if upgrade.name === 'seedling'}
-						<IconSeeding size={iconSize} />
-					{:else if upgrade.name === 'plant'}
-						<IconPlant size={iconSize} />
-					{:else if upgrade.name === 'tree'}
-						<IconTree size={iconSize} />
-					{:else if upgrade.name === 'forest'}
-						<IconTrees size={iconSize} />
-					{/if}
+					<svelte:component this={upgradeIcons[i].component} size={iconSize} />
 				</button>
 				<progress
 					class="w-content progress"
