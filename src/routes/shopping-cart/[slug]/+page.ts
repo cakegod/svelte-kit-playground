@@ -1,8 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { productsList } from '../data';
-import type { PageLoad } from './$types';
 
-export const load = (({ params }) => {
+export const load = ({ params }) => {
 	const product = productsList.find(
 		(product) =>
 			product.name ===
@@ -16,4 +15,4 @@ export const load = (({ params }) => {
 		return { ...product, slug: params.slug };
 	}
 	throw error(404, 'Not found');
-}) satisfies PageLoad;
+};

@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { cart } from 'store';
-	import type { PageData } from './$types';
 
-	export let data: PageData;
+	export let data;
 </script>
 
 <svelte:head>
@@ -15,7 +14,7 @@
 		<img class="rounded-box" src={data.url} alt={data.name} />
 	</figure>
 	<div class="flex flex-col gap-4 md:gap-6">
-		<h2 class="text-4xl font-bold ">{data.name}</h2>
+		<h2 class="text-4xl font-bold">{data.name}</h2>
 		<p class="text-4xl font-bold text-red-700">{data.price}€</p>
 		<button
 			on:click={() => cart.addProduct(data)}

@@ -1,4 +1,4 @@
-import { get, writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 import { Upgrade, UPGRADES_LIST } from './data/upgrades';
 
 const baseCurrency = {

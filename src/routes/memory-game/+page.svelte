@@ -10,16 +10,16 @@
 		bestScore = score;
 	}
 
-	function handleClick(card: Card) {
+	function handleClick(card: Card): void {
 		if (card.clicked) {
-			cards = shuffleCards(cards.map((card) => ({ ...card, clicked: false })));
+			cards = shuffleCards(cards.map((c) => ({ ...c, clicked: false })));
 		} else {
 			card.clicked = true;
 			cards = shuffleCards(cards);
 		}
 	}
 
-	function shuffleCards(cards: Card[]) {
+	function shuffleCards(cards: Card[]): Card[] {
 		for (let i = 0; i < cards.length; i++) {
 			let j = Math.floor(Math.random() * (i + 1));
 			[cards[i], cards[j]] = [cards[j], cards[i]];

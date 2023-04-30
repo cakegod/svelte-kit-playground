@@ -61,7 +61,7 @@
 <div class="flex h-full w-full flex-col items-center gap-4">
 	<form on:submit={() => (promise = fetchWeather(query))}>
 		<div class=" input-group">
-			<input bind:value={query} type="text" placeholder="Search City" class="input-accent input " />
+			<input bind:value={query} type="text" placeholder="Search City" class="input-accent input" />
 			<button class="btn-accent btn"><IconSearch /></button>
 		</div>
 	</form>

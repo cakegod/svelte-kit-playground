@@ -15,14 +15,14 @@
 			<figure class="w-32">
 				<img class="w-full" src={product.url} alt={product.name} />
 			</figure>
-			<div class="flex flex-1 flex-col justify-evenly text-base font-bold  ">
+			<div class="flex flex-1 flex-col justify-evenly text-base font-bold">
 				<h2 class="text-base-content/75">{product.name}</h2>
 				<p class="text-lg">{product.price}€</p>
 				<div class="input-group flex items-center">
 					<button
 						on:click={() => cart.decrementQuantity(product)}
 						on:keydown={() => cart.decrementQuantity(product)}
-						class="btn-secondary btn-xs btn flex items-center justify-center "
+						class="btn-secondary btn-xs btn flex items-center justify-center"
 					>
 						-
 					</button>
@@ -34,7 +34,7 @@
 					<button
 						on:click={() => cart.incrementQuantity(product)}
 						on:keydown={() => cart.incrementQuantity(product)}
-						class="btn-secondary btn-xs btn flex items-center justify-center "
+						class="btn-secondary btn-xs btn flex items-center justify-center"
 					>
 						+
 					</button>

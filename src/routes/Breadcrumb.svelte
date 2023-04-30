@@ -9,17 +9,24 @@
 		name: string;
 	};
 
-	const toBreadcrumb = (url: string): Breadcrumb[] | [] =>
-		url === '/'
-			? []
-			: url.split('/').reduce((acc, curr, i, arr) => {
-					const path = arr.slice(0, i + 1).join('/');
-					const name = curr
-						.split('-')
-						.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-						.join(' ');
-					return [...acc, path && name ? { path, name } : { path: '/', name: 'Home' }];
-			  }, [] as Breadcrumb[]);
+	const generateName = (segment: string): string => {
+		return segment
+			.split('-')
+			.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+			.join(' ');
+	};
+
+	const toBreadcrumb = (url: string): Breadcrumb[] | [] => {
+		if (url === '/') {
+			return [];
+		}
+
+		return url.split('/').reduce((acc, curr, i, arr) => {
+			const path = arr.slice(0, i + 1).join('/');
+			const name = curr ? generateName(curr) : 'Home';
+			return [...acc, { path, name }];
+		}, [] as Breadcrumb[]);
+	};
 
 	$: breadcrumbs = toBreadcrumb($page.url.pathname);
 	$: isLastItem = (index: number) => index === breadcrumbs.length - 1;
