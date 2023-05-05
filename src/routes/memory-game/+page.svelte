@@ -5,27 +5,30 @@
 	let isGameReady = false;
 	let cards = cardList;
 	let bestScore = 0;
-	$: score = cards.reduce((acc, curr) => (curr.clicked ? acc + 1 : acc), 0);
+	$: score = cards.filter((card) => card.clicked).length;
+
 	$: if (score > bestScore) {
 		bestScore = score;
 	}
 
-	function handleClick(card: Card): void {
-		if (card.clicked) {
-			cards = shuffleCards(cards.map((c) => ({ ...c, clicked: false })));
-		} else {
-			card.clicked = true;
-			cards = shuffleCards(cards);
-		}
-	}
+	$: shuffledCards = shuffleCards(cards);
 
-	function shuffleCards(cards: Card[]): Card[] {
+	const handleClick = (card: Card): void => {
+		if (card.clicked) {
+			cards = cards.map((c) => ({ ...c, clicked: false }));
+		} else {
+			cards = cards.map((c) => (c.id === card.id ? { ...c, clicked: true } : c));
+		}
+	};
+
+
+	const shuffleCards = (cards: Card[]): Card[] => {
 		for (let i = 0; i < cards.length; i++) {
 			let j = Math.floor(Math.random() * (i + 1));
 			[cards[i], cards[j]] = [cards[j], cards[i]];
 		}
 		return cards;
-	}
+	};
 </script>
 
 <svelte:head>
@@ -34,7 +37,7 @@
 
 {#if isGameReady}
 	<!-- Scores -->
-	<div class="stats mb-4 bg-base-300">
+	<div class="stats bg-base-300 mb-4">
 		<div class="stat w-40 justify-items-end">
 			<p class="stat-title">Score</p>
 			{#key score}
@@ -51,7 +54,7 @@
 
 	<!-- Cards -->
 	<div class="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-		{#each cards as card (card.id)}
+		{#each shuffledCards as card (card.id)}
 			<button
 				class="btn-secondary btn-lg btn flex h-40 flex-col gap-2"
 				transition:fade

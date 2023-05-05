@@ -13,24 +13,33 @@
 			.split('-')
 			.map((name) => name.charAt(0).toUpperCase() + name.slice(1))
 			.join(' ');
-		return acc.some((item) => item.name === projectName) || projectName === ''
-			? acc
-			: [...acc, { route: projectPath, name: projectName }];
+
+		if (acc.some((item) => item.name === projectName)) {
+			return acc;
+		}
+		return projectName === '' ? acc : [...acc, { route: projectPath, name: projectName }];
 	}, [] as ProjectLink[]);
 </script>
 
 <script lang="ts">
 	import { IconAlignJustified } from '@tabler/icons-svelte';
+	import { page } from '$app/stores';
+
+	$: console.log($page);
 </script>
 
-<nav class="navbar rounded-box max-w-screen-2xl bg-accent text-accent-content xl:mx-auto">
+<nav class="navbar rounded-box bg-accent text-accent-content max-w-screen-2xl xl:mx-auto">
 	<div class=" navbar-start dropdown">
 		<button class="btn-ghost btn flex flex-wrap">
 			<IconAlignJustified />
 		</button>
-		<ul class="dropdown-content menu rounded-box mt-3 w-52 bg-accent p-2 shadow">
+		<ul class="dropdown-content menu rounded-box bg-accent mt-3 w-52 p-2 shadow">
 			{#each projectLinks as link}
-				<a class="p-4 transition-colors hover:bg-accent-focus" href={`${link.route}`}>
+				<a
+					class="hover:bg-accent-focus p-4 transition-colors"
+					href={`${link.route}`}
+					aria-current={link.route === $page.url.pathname}
+				>
 					{link.name}
 				</a>
 			{/each}

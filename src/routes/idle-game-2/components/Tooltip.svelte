@@ -2,19 +2,18 @@
 	let isHovered = false;
 	let x: number;
 	let y: number;
-
-	function mouseOver(event: MouseEvent) {
+	const mouseOver = (event: MouseEvent) => {
 		isHovered = true;
 		x = event.pageX + 5;
 		y = event.pageY + 5;
-	}
-	function mouseMove(event: MouseEvent) {
+	};
+	const mouseMove = (event: MouseEvent) => {
 		x = event.pageX + 5;
 		y = event.pageY + 5;
-	}
-	function mouseLeave() {
+	};
+	const mouseLeave = () => {
 		isHovered = false;
-	}
+	};
 </script>
 
 <!-- svelte-ignore a11y-mouse-events-have-key-events -->
